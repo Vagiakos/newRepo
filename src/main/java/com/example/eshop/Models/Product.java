@@ -2,6 +2,8 @@ package com.example.eshop.Models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product {
@@ -12,6 +14,8 @@ public class Product {
     private String discription;
     private double price;
     private int quantity;
+    @ManyToOne
+    @JoinColumn(name = "shop_afm")
     private Shop shop;
 
     public Product(Long code, String type, String discription, double price, int quantity) {
