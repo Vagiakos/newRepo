@@ -10,10 +10,12 @@ public class Citizen {
 
     @Id
     private Long afm;
+   
     private String name;
     private String surname;
     private String email;
     private String password;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
 

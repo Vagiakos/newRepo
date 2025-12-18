@@ -1,8 +1,11 @@
 package com.example.eshop.Models;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -17,6 +20,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "shop_afm")
     private Shop shop;
+
+    @ManyToMany(mappedBy = "product")
+    private List<Cart> carts;
+
 
     public Product(Long code, String type, String discription, double price, int quantity) {
         this.code = code;
