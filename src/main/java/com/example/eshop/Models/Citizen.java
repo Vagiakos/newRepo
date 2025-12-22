@@ -1,8 +1,10 @@
 package com.example.eshop.Models;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -13,10 +15,13 @@ public class Citizen {
    
     private String name;
     private String surname;
+    
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     public Citizen(Long afm, String name, String surname, String email, String password) {

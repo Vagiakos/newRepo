@@ -13,26 +13,47 @@ public class Product {
 
     @Id
     private Long code;
+
     private String type;
-    private String discription;
+    private String description;
     private double price;
     private int quantity;
+
     @ManyToOne
     @JoinColumn(name = "shop_afm")
     private Shop shop;
 
-    @ManyToMany(mappedBy = "product")
+    @ManyToMany(mappedBy = "products")
     private List<Cart> carts;
 
-
-    public Product(Long code, String type, String discription, double price, int quantity) {
-        this.code = code;
-        this.type = type;
-        this.discription = discription;
-        this.price = price;
-        this.quantity = quantity;
+    public Product() {
     }
 
-    public Product() {
+    public Long getCode() {
+        return code;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
