@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 public class Product {
 
     @Id
-    private Long code;
+    private String brand;
 
     private String type;
     private String description;
@@ -29,8 +29,8 @@ public class Product {
     public Product() {
     }
 
-    public Long getCode() {
-        return code;
+    public String getBrand() {
+        return brand;
     }
 
     public String getType() {

@@ -28,7 +28,7 @@ public class Cart {
     @JoinTable(
         name = "cart_products",
         joinColumns = @JoinColumn(name = "cart_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_code")
+        inverseJoinColumns = @JoinColumn(name = "product_brand")
     )
     private List<Product> products = new ArrayList<>();
 
@@ -50,6 +50,8 @@ public class Cart {
     public List<Product> getProducts() {
         return products;
     }
+
+    public void clearProducts(){products.clear();}
 
     public void addProduct(Product product) {
         this.products.add(product);
