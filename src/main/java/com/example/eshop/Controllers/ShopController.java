@@ -8,6 +8,9 @@ import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.Services.ShopService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/shops")
@@ -32,4 +35,10 @@ public class ShopController {
     public List<Product> getProductsFromShop(@RequestParam Long afm){
         return productService.getProductsFromShop(afm);
     }
+
+    @PostMapping("/addProduct")
+    public void postMethodName(@RequestBody Product product) {
+        productService.addProduct(product);
+    }
+    
 }

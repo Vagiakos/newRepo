@@ -1,21 +1,18 @@
 package com.example.eshop.Services;
 
-import com.example.eshop.Models.Product;
-import com.example.eshop.Models.Shop;
-import com.example.eshop.Repositories.ProductRepository;
-import com.example.eshop.Repositories.ShopRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
+import com.example.eshop.Models.Product;
+import com.example.eshop.Models.Shop;
+import com.example.eshop.Repositories.ProductRepository;
+import com.example.eshop.Repositories.ShopRepository;
 
 @Service
 public class ProductService {
@@ -43,7 +40,6 @@ public class ProductService {
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), price));
         }
 
-
         return productRepository.findAll(spec);
 
     }
@@ -68,5 +64,10 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         Product product = optionalProduct.get();
         return product;
+    }
+
+
+    public void addProduct(Product product){
+        productRepository.save(product);
     }
 }
