@@ -3,6 +3,10 @@ package com.example.eshop.Models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +31,7 @@ public class Shop {
         cascade = CascadeType.ALL,
         orphanRemoval = true //if product is removed from shop(list), delete it from db
     )
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
     public Shop() {
@@ -55,4 +60,25 @@ public class Shop {
     public List<Product> getProducts() {
         return products;
     }
+
+    public void setAfm(Long afm) {
+    this.afm = afm;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

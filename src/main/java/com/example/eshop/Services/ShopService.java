@@ -36,4 +36,8 @@ public class ShopService {
         return "Shop login successful";
     }
 
+    public void addShop(Shop shop) {
+        shopRepository.save(shop);
+    }
+
 }

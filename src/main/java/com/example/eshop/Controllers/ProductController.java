@@ -24,7 +24,6 @@ public class ProductController {
             cartService.addProductToCart(cartId, brand);
         }
 
-
     @GetMapping("/getProduct")
     public Product getProduct(String brand){
         return productService.getProduct(brand);

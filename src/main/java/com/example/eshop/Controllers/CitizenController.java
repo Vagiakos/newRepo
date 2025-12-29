@@ -1,5 +1,6 @@
 package com.example.eshop.Controllers;
 
+import com.example.eshop.Models.Citizen;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class CitizenController {
         );
     }
 
+    @PostMapping("/registerCitizen")
+    public void registerCitizen(@RequestBody Citizen citizen) {
+        citizenService.addCitizen(citizen);
+    }
 
     @GetMapping("/getAllProducts")
     public List<Product> getAllProducts(){

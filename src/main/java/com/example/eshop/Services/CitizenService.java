@@ -33,4 +33,9 @@ public class CitizenService {
         //successful login
         return "Citizen login successful";
     }
+
+    public void addCitizen(Citizen citizen) {
+        citizenRepository.save(citizen);
+    }
+
 }

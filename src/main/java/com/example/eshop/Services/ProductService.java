@@ -1,5 +1,7 @@
 package com.example.eshop.Services;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +51,22 @@ public class ProductService {
     }
 
     public List<Product> getProductsFromShop(Long afm){
+
+        List<Product> products = new ArrayList<>();
         Optional<Shop> optionalShop = shopRepository.findById(afm);
         if(!optionalShop.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found");
         Shop shop = optionalShop.get();
-        return shop.getProducts();
-
+        List<Product> shopProducts = shop.getProducts();
+        for(Product p : shopProducts){
+            String brand = p.getBrand();
+            Optional<Product> optionalProduct = productRepository.findById(brand);
+            if(optionalProduct.isPresent())
+                products.add(optionalProduct.get());
+            else
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+        return products;
     }
 
 
@@ -65,7 +77,6 @@ public class ProductService {
         Product product = optionalProduct.get();
         return product;
     }
-
 
     public void addProduct(Product product){
         productRepository.save(product);

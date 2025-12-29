@@ -2,6 +2,9 @@ package com.example.eshop.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -21,12 +24,22 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "shop_afm")
+
+    @JsonBackReference 
     private Shop shop;
 
     @ManyToMany(mappedBy = "products")
     private List<Cart> carts;
 
     public Product() {
+    }
+
+    public Product(String brand, String type, String description, double price, int quantity) {
+        this.brand = brand;
+        this.type = type;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 
     public String getBrand() {
