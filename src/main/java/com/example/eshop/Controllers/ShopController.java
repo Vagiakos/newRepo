@@ -1,15 +1,19 @@
 package com.example.eshop.Controllers;
-import com.example.eshop.Models.Citizen;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Models.Shop;
 import com.example.eshop.Services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.Services.ShopService;
-
-import java.util.List;
 
 
 @RestController
@@ -31,6 +35,12 @@ public class ShopController {
         );
     }
 
+    // /shops/registerShop
+    @PostMapping("/registerShop")
+    public void registerShop(@RequestBody Shop shop) {
+        shopService.addShop(shop);
+    }
+
     @GetMapping("/getProductsFromShop")
     public List<Product> getProductsFromShop(@RequestParam Long afm){
         return productService.getProductsFromShop(afm);
@@ -42,8 +52,5 @@ public class ShopController {
     }
     
 
-    @PostMapping("/registerShop")
-    public void registerShop(@RequestBody Shop shop) {
-        shopService.addShop(shop);
-    }
+    
 }
