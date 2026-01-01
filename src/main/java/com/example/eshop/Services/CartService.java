@@ -1,19 +1,19 @@
 package com.example.eshop.Services;
 
-import com.example.eshop.Models.Cart;
-import com.example.eshop.Models.Product;
-import com.example.eshop.Repositories.CartRepository;
-import com.example.eshop.Repositories.ProductRepository;
-import com.sun.net.httpserver.HttpsServer;
-import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Optional;
+import com.example.eshop.Models.Cart;
+import com.example.eshop.Models.Product;
+import com.example.eshop.Repositories.CartRepository;
+import com.example.eshop.Repositories.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CartService {
@@ -64,9 +64,6 @@ public class CartService {
 
         cart.clearProducts();
         cartRepository.save(cart);
-
-
-
 
     }
 }

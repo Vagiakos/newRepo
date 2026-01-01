@@ -3,8 +3,6 @@ package com.example.eshop.Models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -31,6 +29,10 @@ public class Shop {
         cascade = CascadeType.ALL,
         orphanRemoval = true //if product is removed from shop(list), delete it from db
     )
+
+    //for bi-directional relationships
+    //use to avoid infinite loop during serialization (shop -> products -> shop -> products ...)
+    //it means that this side is the parent side (shop sends products in JSON)
     @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 

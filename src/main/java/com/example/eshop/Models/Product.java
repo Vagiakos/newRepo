@@ -3,7 +3,6 @@ package com.example.eshop.Models;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,10 +20,12 @@ public class Product {
     private String description;
     private double price;
     private int quantity;
-
+    
     @ManyToOne
     @JoinColumn(name = "shop_afm")
 
+    //other side of bi-directional relationship
+    //product doesnt send shop in JSON (to avoid infinite loop)
     @JsonBackReference 
     private Shop shop;
 

@@ -20,7 +20,7 @@ public class Citizen {
     private String email;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) //save, delete, update, merge, refresh
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
@@ -46,11 +46,11 @@ public class Citizen {
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getSurname() {
         return surname;
     }
