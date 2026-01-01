@@ -22,8 +22,8 @@ public class ProductController {
 
 
     @PostMapping("/addProductToCart")
-        public void addProductToCart(Long cartId, String brand){
-            cartService.addProductToCart(cartId, brand);
+        public void addProductToCart(Long cartId, String brand, int quantity){
+            cartService.addProductToCart(cartId, brand, quantity);
         }
 
     @GetMapping("/getProduct")

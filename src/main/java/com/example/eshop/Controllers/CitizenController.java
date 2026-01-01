@@ -15,7 +15,7 @@ import com.example.eshop.Models.Citizen;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Services.CitizenService;
 import com.example.eshop.Services.ProductService;
-//d
+
 @RestController
 @RequestMapping("/citizens") 
 public class CitizenController {

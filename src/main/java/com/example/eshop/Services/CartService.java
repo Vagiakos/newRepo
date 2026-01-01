@@ -24,22 +24,30 @@ public class CartService {
     @Autowired
     CartRepository cartRepository;
 
-    public void addProductToCart(Long cartId, String brand) {
+    public void addProductToCart(Long cartId, String brand, int quantity) {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if(!optionalCart.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
         Cart cart = optionalCart.get();
+
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         Product product = optionalProduct.get();
+
         //μπορει ο ελεγχος να γινεται και στο product απο αποψη σχεδιασης
-        if(product.getQuantity() > 0){
-            cart.addProduct(product);
-            cart.setPrice(product.getPrice() + cart.getPrice());
+        if(product.getQuantity() >= quantity){
+            //add products in cart
+            for(int i = 0; i < quantity; i++){
+                cart.addProduct(product);
+            }
+            //update cart price
+            cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
             cartRepository.save(cart);
-        }else{
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product out of stock");
+        }else {
+            //if requested quantity > stock
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Requested quantity exceeds available stock. Only " + product.getQuantity() + " available");
         }
     }
 
