@@ -46,8 +46,9 @@ public class ShopController {
         return productService.getProductsFromShop(afm);
     }
 
+    //ισως χρειαστει να στελνουμε και το id του shop για ελεγχο
     @PostMapping("/addProduct")
-    public void postMethodName(@RequestBody Product product) {
+    public void addProduct(@RequestBody Product product) {
         productService.addProduct(product);
     }
     

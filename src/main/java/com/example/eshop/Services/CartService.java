@@ -36,6 +36,7 @@ public class CartService {
         //μπορει ο ελεγχος να γινεται και στο product απο αποψη σχεδιασης
         if(product.getQuantity() > 0){
             cart.addProduct(product);
+            cart.setPrice(product.getPrice() + cart.getPrice());
             cartRepository.save(cart);
         }else{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product out of stock");
@@ -63,6 +64,7 @@ public class CartService {
         }
 
         cart.clearProducts();
+        cart.setPrice(0);
         cartRepository.save(cart);
 
 

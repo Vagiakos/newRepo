@@ -49,13 +49,12 @@ public class CitizenController {
     }
 
 
-    //ΕΚΚΡΕΜΟΤΗΤΑ
-    //να κανω και αναζητηση με βαση το shop
     @GetMapping("/getProductsByFilters")
     public List<Product> getProductsByFilters(@RequestParam(required = false) String brand, //can be null
                                               @RequestParam(required = false) String type,
-                                              @RequestParam(required = false) Double price){
-        return productService.getProductsByFilters(brand, type, price);
+                                              @RequestParam(required = false) Double price,
+                                              @RequestParam(required = false) Long shop_afm){
+        return productService.getProductsByFilters(brand, type, price, shop_afm);
 
 
     }
