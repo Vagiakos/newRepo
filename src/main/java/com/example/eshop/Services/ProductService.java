@@ -27,8 +27,8 @@ public class ProductService {
     public List<Product> getProductsByFilters(String brand, String type, Double price, Long shop_afm) {
 
         //το Specificaton λειτουργει σαν sql query με το root να αναφερεται στον πινακα το και το criteriabuilder ως where, και ουσιαστικα με το and ενωνει τις συνθηκες
-        //αμα ο χρηστης δεν βαλει κανενα φιλτρο δηλαδη ερθουν ολα null τοτε θα επιστραφουν ολα τα products select * from product δεν υπαρχουν συνθηκες
-        //πρεπει απο καπου να ξεκινησει το where και ξεκιναει απο το 1 =1. Αν δεν υπηρχε αυτη η γραμμη θα εβγαζε ερρορ.Μετραει και την περιπτωση οπου δεν βαζει κανενα φιλτρο ο χρηστης
+        //αμα ο χρηστης δεν βαλει κανενα φιλτρο δηλαδη ερθουν ολα null τοτε θα επιστραφουν ολα τα products select * from product, δεν υπαρχουν συνθηκες
+        //criteriaBuilder.conjunction() σημαίνει “1=1”, δηλαδή ξεκινάμε με ένα empty where. Αν δεν υπηρχε αυτη η γραμμη θα εβγαζε error. Μετραει και την περιπτωση οπου δεν βαζει κανενα φιλτρο ο χρηστης
         Specification<Product> spec = Specification.where(((root, query, criteriaBuilder) -> criteriaBuilder.conjunction()));
         if(brand !=null){
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get("brand")), brand.toLowerCase()));
@@ -56,7 +56,6 @@ public class ProductService {
     }
 
     public List<Product> getProductsFromShop(Long afm){
-
         List<Product> products = new ArrayList<>();
         Optional<Shop> optionalShop = shopRepository.findById(afm);
         if(!optionalShop.isPresent())

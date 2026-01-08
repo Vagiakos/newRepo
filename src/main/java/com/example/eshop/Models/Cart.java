@@ -51,7 +51,9 @@ public class Cart {
         return products;
     }
 
-    public void clearProducts(){products.clear();}
+    public void clearProducts(){
+        products.clear();
+    }
 
     public void addProduct(Product product) {
         this.products.add(product);

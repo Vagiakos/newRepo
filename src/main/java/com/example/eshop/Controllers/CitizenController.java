@@ -56,8 +56,5 @@ public class CitizenController {
                                               @RequestParam(required = false) Double price,
                                               @RequestParam(required = false) Long shop_afm){
         return productService.getProductsByFilters(brand, type, price, shop_afm);
-
-
     }
-
 }

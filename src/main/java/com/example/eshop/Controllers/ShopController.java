@@ -15,7 +15,6 @@ import com.example.eshop.Models.Shop;
 import com.example.eshop.Services.ProductService;
 import com.example.eshop.Services.ShopService;
 
-
 @RestController
 @RequestMapping("/shops")
 public class ShopController {
@@ -46,12 +45,8 @@ public class ShopController {
         return productService.getProductsFromShop(afm);
     }
 
-    //ισως χρειαστει να στελνουμε και το id του shop για ελεγχο
     @PostMapping("/addProduct")
     public void addProduct(@RequestBody Product product) {
         productService.addProduct(product);
-    }
-    
-
-    
+    }  
 }

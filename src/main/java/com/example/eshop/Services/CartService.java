@@ -25,17 +25,19 @@ public class CartService {
     CartRepository cartRepository;
 
     public void addProductToCart(Long cartId, String brand, int quantity) {
+        //search for cart
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if(!optionalCart.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
         Cart cart = optionalCart.get();
-
+    
+        //search for citizen
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         Product product = optionalProduct.get();
-
-        //μπορει ο ελεγχος να γινεται και στο product απο αποψη σχεδιασης
+        
+        //check stock
         if(product.getQuantity() >= quantity){
             //add products in cart
             for(int i = 0; i < quantity; i++){
@@ -51,8 +53,8 @@ public class CartService {
         }
     }
 
-    //εδω να ρωτησω αν πρεπει να κανω καποια σχετικη υλοποιηση αν πατησουν απο το front ταυτοχρονα το κουμπι buy δυο χρηστες
-    //κανω την μεθοδο transactional ωστε αν κατι παει λαθος στο δευτερο loop να κανει roll back οτι αλλαγη εγινε πιο πριν
+    //it protects from race conditions (users press buy at the same time)
+    //use transactional to rollback the updates (atomic changes)
     @Transactional
     public void buyProductsFromCart(Long cartId) {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
@@ -61,11 +63,13 @@ public class CartService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not found");
         Cart cart = optionalCart.get();
         List<Product> products = cart.getProducts();
+        //if out-of-stock → exception → rollback
         for(Product p : products){
             if(p.getQuantity() == 0)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, p.getBrand() + " out of stock");
         }
 
+        //we can use Map<Product, Integer> to subtract exactly the amount the user entered
         for(Product p : products){
             p.setQuantity(p.getQuantity() - 1);
             productRepository.save(p);
