@@ -80,4 +80,39 @@ public class CartService {
         cartRepository.save(cart);
 
     }
+
+    public void removeProductFromCart(Long cartId, String brand, int quantity) {
+    // find cart
+    Cart cart = cartRepository.findById(cartId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found"));
+
+    // find product
+    Product product = productRepository.findById(brand)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+    // remove from cart
+    int removedCount = 0; //counter for removed items
+    List<Product> products = cart.getProducts();
+    for (int i = products.size() - 1; i >= 0 && removedCount < quantity; i--) { //LIFO
+        if (products.get(i).getBrand().equals(brand)) {
+            products.remove(i);
+            removedCount++;
+        }
+    }
+    
+    if (removedCount > 0) {
+        // refresh cart price (can't be negative)
+        cart.setPrice(Math.max(cart.getPrice() - removedCount * product.getPrice(), 0));
+
+        // if requested quantity > available in cart
+        if (removedCount < quantity) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                "Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
+        }
+
+        cartRepository.save(cart);
+        } else {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not in cart");
+        }   
+    }
 }
