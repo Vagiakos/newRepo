@@ -5,8 +5,17 @@ public class LoginRequest {
 
     private String email; // login via email and password
     private String password;
+    private String type;
 
     public LoginRequest() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getEmail() {
