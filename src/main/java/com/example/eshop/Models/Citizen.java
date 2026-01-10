@@ -10,7 +10,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Citizen extends User{
 
-    @Id
+    @Column(unique = true, nullable = false)
     private Long afm;
    
     private String name;

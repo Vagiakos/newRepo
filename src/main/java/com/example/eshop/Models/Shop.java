@@ -14,7 +14,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Shop extends User{
 
-    @Id
+    @Column(unique = true, nullable = false)
     private Long afm;
 
     private String brand;

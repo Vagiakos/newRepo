@@ -14,7 +14,7 @@ public abstract class User {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
-    private String type;
+    private String typeOfUser;
 
 
     public User(String username, String email, String password) {
@@ -58,11 +58,11 @@ public abstract class User {
         this.password = password;
     }
 
-    public String isType() {
-        return type;
+    public String getTypeOfUser() {
+        return typeOfUser;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void settypeOfUser(String typeOfUser) {
+        this.typeOfUser = typeOfUser;
     }
 }

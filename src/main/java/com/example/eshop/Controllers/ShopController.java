@@ -24,21 +24,6 @@ public class ShopController {
     @Autowired
     private ProductService productService;
 
-    // /shops/login
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        //call shop service login method
-        return shopService.login(
-            request.getEmail(),
-            request.getPassword()
-        );
-    }
-
-    // /shops/registerShop
-    @PostMapping("/registerShop")
-    public void registerShop(@RequestBody Shop shop) {
-        shopService.addShop(shop);
-    }
 
     @GetMapping("/getProductsFromShop")
     public List<Product> getProductsFromShop(@RequestParam Long afm){

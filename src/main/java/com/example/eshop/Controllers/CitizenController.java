@@ -25,31 +25,14 @@ public class CitizenController {
     
     @Autowired
     private ProductService productService;
-    
-    // /citizens/login
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) { //request body contains email and password
-        //call citizen service login method
-        return citizenService.login(
-            //use getters from dto
-            request.getEmail(),
-            request.getPassword()
-        );
-    }
-    
-    // /citizens/registerCitizen
-    @PostMapping("/registerCitizen")
-    public void registerCitizen(@RequestBody Citizen citizen) {
-        citizenService.addCitizen(citizen);
-    }
+
     
     @GetMapping("/getAllProducts")
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
     }
 
-    //ΕΚΚΡΕΜΟΤΗΤΑ
-    //να κανω και αναζητηση με βαση το shop 
+
     @GetMapping("/getProductsByFilters") 
     public List<Product> getProductsByFilters(@RequestParam(required = false) String brand, //can be null
                                               @RequestParam(required = false) String type,
