@@ -1,7 +1,12 @@
 package com.example.eshop.Services;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.Models.Product;
+import com.example.eshop.Repositories.CartRepository;
+import com.example.eshop.Repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,7 +20,38 @@ import com.example.eshop.Repositories.CitizenRepository;
 public class CitizenService {
     
     @Autowired
-    private CitizenRepository citizenRepository;
+    private CartRepository cartRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    //it protects from race conditions (users press buy at the same time)
+    //use transactional to rollback the updates (atomic changes)
+    @Transactional
+    public void buyProductsFromCart(Long cartId) {
+        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+
+        if(!optionalCart.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not found");
+        Cart cart = optionalCart.get();
+        List<Product> products = cart.getProducts();
+        //if out-of-stock → exception → rollback
+        for(Product p : products){
+            if(p.getQuantity() == 0)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, p.getBrand() + " out of stock");
+        }
+
+        //we can use Map<Product, Integer> to subtract exactly the amount the user entered
+        for(Product p : products){
+            p.setQuantity(p.getQuantity() - 1);
+            productRepository.save(p);
+        }
+
+        cart.clearProducts();
+        cart.setPrice(0);
+        cartRepository.save(cart);
+
+    }
 
 //    public void addCitizen(Citizen citizen) {
 //

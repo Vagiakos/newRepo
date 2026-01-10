@@ -18,8 +18,6 @@ import com.example.eshop.Services.ShopService;
 @RestController
 @RequestMapping("/shops")
 public class ShopController {
-    @Autowired
-    private ShopService shopService;
 
     @Autowired
     private ProductService productService;

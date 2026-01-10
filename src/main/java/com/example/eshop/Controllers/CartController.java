@@ -1,4 +1,5 @@
 package com.example.eshop.Controllers;
+import com.example.eshop.Services.CitizenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,11 +11,11 @@ import com.example.eshop.Services.CartService;
 public class CartController {
 
     @Autowired
-    CartService cartService;
+    private CitizenService citizenService;
 
     @PostMapping("/buyProductsFromCart")
     public void buyProductsFromCart(@RequestParam Long cartId){
-        cartService.buyProductsFromCart(cartId);
+        citizenService.buyProductsFromCart(cartId);
     }
     
 }

@@ -21,9 +21,6 @@ import com.example.eshop.Services.ProductService;
 public class CitizenController {
     
     @Autowired
-    private CitizenService citizenService;
-    
-    @Autowired
     private ProductService productService;
 
     
