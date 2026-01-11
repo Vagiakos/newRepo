@@ -43,8 +43,9 @@ public class CartService {
             for(int i = 0; i < quantity; i++){
                 cart.addProduct(product);
             }
-            //update cart price
+            //update cart price and quantity
             cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
+            cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
             cartRepository.save(cart);
         }else {
             //if requested quantity > stock
@@ -77,6 +78,8 @@ public class CartService {
 
         cart.clearProducts();
         cart.setPrice(0);
+        cart.setTotalQuantity(0);
+        cart.setCompleted(true);
         cartRepository.save(cart);
 
     }
@@ -103,6 +106,8 @@ public class CartService {
     if (removedCount > 0) {
         // refresh cart price (can't be negative)
         cart.setPrice(Math.max(cart.getPrice() - removedCount * product.getPrice(), 0));
+        // refresh cart total quantity
+        cart.setTotalQuantity(Math.max(cart.getTotalQuantity() - removedCount, 0)); 
 
         // if requested quantity > available in cart
         if (removedCount < quantity) {
