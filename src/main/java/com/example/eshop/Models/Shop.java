@@ -12,17 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Shop {
-
-    @Id
-    private Long afm;
-
-    @Column(unique = true, nullable = false) //unique email and not null
-    private String email;
+public class Shop extends User{
 
     private String brand;
     private String owner;
-    private String password;
+
 
     @OneToMany(
         mappedBy = "shop",
@@ -39,37 +33,27 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(Long afm, String email, String brand, String owner, String password) {
-        this.afm = afm;
-        this.email = email;
+    public Shop(Long afm, String username, String email, String brand, String owner, String password) {
+        super(afm, username, email, password);
         this.brand = brand;
         this.owner = owner;
-        this.password = password;
+
     }
 
-    public Long getAfm() {
-        return afm;
+
+
+    public String getOwner() {
+        return owner;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+    public String getBrand() {
+        return brand;
     }
 
     public List<Product> getProducts() {
         return products;
     }
 
-    public void setAfm(Long afm) {
-    this.afm = afm;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public void setBrand(String brand) {
         this.brand = brand;
@@ -79,8 +63,5 @@ public class Shop {
         this.owner = owner;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 }

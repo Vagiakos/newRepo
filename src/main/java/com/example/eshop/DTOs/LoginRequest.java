@@ -9,6 +9,7 @@ public class LoginRequest {
     public LoginRequest() {
     }
 
+
     public String getEmail() {
         return email;
     }

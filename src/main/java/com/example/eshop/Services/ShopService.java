@@ -16,47 +16,37 @@ public class ShopService {
     @Autowired
     private ShopRepository shopRepository;
 
-    // login method for shop
-    public String login(String email, String password) {
 
-        Optional<Shop> shopOpt = shopRepository.findByEmail(email);
 
-        // check if shop exists
-        if (shopOpt.isEmpty()) {
-            //shop not found via email
-            return "Shop not found";
+    public void updateShop(Long afm, String username, String email, String brand, String owner, String password){
+        Optional<Shop> optionalShop = shopRepository.findById(afm);
+        if(!optionalShop.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found!");
+        Shop shop = optionalShop.get();
+
+        if(username!=null)
+            shop.setUsername(username);
+        if(email!=null) {
+            if (!email.contains("@"))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+            shop.setEmail(email);
         }
-
-        Shop shop = shopOpt.get();
-
-        // check password
-        if (!shop.getPassword().equals(password)) {
-            return "Wrong password";
-        }
-
-        // successful login
-        return "Shop login successful";
-    }
-
-    //register shop 
-    public void addShop(Shop shop) {
-        
-        // Validation email
-        if (shop.getEmail() == null || !shop.getEmail().contains("@")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
-        }
-
-        // Validation password
-        if (shop.getPassword() == null || shop.getPassword().length() < 6) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters");
-        }
-
         // check if email already exists
-        if (shopRepository.findByEmail(shop.getEmail()).isPresent()) {
+        if (shopRepository.findByEmail(email).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
         }
+        if(brand!=null)
+            shop.setBrand(brand);
+        if(owner!=null)
+            shop.setOwner(owner);
 
-        // save shop
+        if (password != null){
+            if(password.length() < 6)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be 6 character or more");
+            shop.setPassword(password);
+        }
+
         shopRepository.save(shop);
     }
+
 }

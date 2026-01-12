@@ -2,12 +2,7 @@ package com.example.eshop.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.Models.Product;
@@ -18,27 +13,13 @@ import com.example.eshop.Services.ShopService;
 @RestController
 @RequestMapping("/shops")
 public class ShopController {
-    @Autowired
-    private ShopService shopService;
 
     @Autowired
     private ProductService productService;
 
-    // /shops/login
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        //call shop service login method
-        return shopService.login(
-            request.getEmail(),
-            request.getPassword()
-        );
-    }
+    @Autowired
+    private ShopService shopService;
 
-    // /shops/registerShop
-    @PostMapping("/registerShop")
-    public void registerShop(@RequestBody Shop shop) {
-        shopService.addShop(shop);
-    }
 
     @GetMapping("/getProductsFromShop")
     public List<Product> getProductsFromShop(@RequestParam Long afm){
@@ -48,5 +29,15 @@ public class ShopController {
     @PostMapping("/addProduct")
     public void addProduct(@RequestBody Product product) {
         productService.addProduct(product);
-    }  
+    }
+
+    @PutMapping("/update")
+    public void UpdateShop(@RequestParam Long afm,
+                           @RequestParam(required = false) String username,
+                           @RequestParam(required = false) String email,
+                           @RequestParam(required = false) String brand,
+                           @RequestParam(required = false) String owner,
+                           @RequestParam(required = false) String password){
+        shopService.updateShop(afm, username,email,brand, owner, password);
+    }
 }

@@ -22,7 +22,7 @@ public class Cart {
     private double price;
 
     private int totalQuantity; //total number of products
-    private boolean completed; 
+    private boolean completed;
 
     @OneToOne(mappedBy = "cart")
     private Citizen citizen;
@@ -61,7 +61,7 @@ public class Cart {
     public void addProduct(Product product) {
         this.products.add(product);
     }
-    
+
     public int getTotalQuantity() {
         return totalQuantity;
     }

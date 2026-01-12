@@ -24,11 +24,11 @@ public class ProductService {
     @Autowired
     ShopRepository shopRepository;
 
-    public List<Product> getProductsByFilters(String brand, String type, Double price, Long shop_afm) {
+    public List<Product> getProductsByFilters(String brand, String type, Double priceMin, Double priceMax, Long shop_afm) {
 
         //το Specificaton λειτουργει σαν sql query με το root να αναφερεται στον πινακα το και το criteriabuilder ως where, και ουσιαστικα με το and ενωνει τις συνθηκες
-        //αμα ο χρηστης δεν βαλει κανενα φιλτρο δηλαδη ερθουν ολα null τοτε θα επιστραφουν ολα τα products select * from product, δεν υπαρχουν συνθηκες
-        //criteriaBuilder.conjunction() σημαίνει “1=1”, δηλαδή ξεκινάμε με ένα empty where. Αν δεν υπηρχε αυτη η γραμμη θα εβγαζε error. Μετραει και την περιπτωση οπου δεν βαζει κανενα φιλτρο ο χρηστης
+        //αμα ο χρηστης δεν βαλει κανενα φιλτρο δηλαδη ερθουν ολα null τοτε θα επιστραφουν ολα τα products select * from product where 1 = 1, δεν υπαρχουν συνθηκες
+        //criteriaBuilder.conjunction() σημαίνει “1=1”. Μετραει και την περιπτωση οπου δεν βαζει κανενα φιλτρο ο χρηστης
         Specification<Product> spec = Specification.where(((root, query, criteriaBuilder) -> criteriaBuilder.conjunction()));
         if(brand !=null){
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get("brand")), brand.toLowerCase()));
@@ -38,8 +38,12 @@ public class ProductService {
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.lower(root.get("type")), type.toLowerCase()));
         }
 
-        if(price !=null){
-            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), price));
+        if(priceMin !=null){
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), priceMin));
+        }
+
+        if(priceMax !=null){
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceMax));
         }
 
         if(shop_afm != null){

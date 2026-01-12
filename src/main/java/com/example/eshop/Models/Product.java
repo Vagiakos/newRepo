@@ -70,4 +70,24 @@ public class Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 }

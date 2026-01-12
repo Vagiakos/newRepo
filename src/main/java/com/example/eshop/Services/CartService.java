@@ -102,22 +102,22 @@ public class CartService {
             removedCount++;
         }
     }
-    
+
     if (removedCount > 0) {
         // refresh cart price (can't be negative)
         cart.setPrice(Math.max(cart.getPrice() - removedCount * product.getPrice(), 0));
         // refresh cart total quantity
-        cart.setTotalQuantity(Math.max(cart.getTotalQuantity() - removedCount, 0)); 
+        cart.setTotalQuantity(Math.max(cart.getTotalQuantity() - removedCount, 0));
 
         // if requested quantity > available in cart
         if (removedCount < quantity) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
         }
 
         cartRepository.save(cart);
         } else {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not in cart");
-        }   
+        }
     }
 }

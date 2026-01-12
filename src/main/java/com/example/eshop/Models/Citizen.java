@@ -8,39 +8,23 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Citizen {
-
-    @Id
-    private Long afm;
+public class Citizen extends User{
    
     private String name;
     private String surname;
-    
-    @Column(unique = true, nullable = false)
-    private String email;
-    private String password;
 
     @OneToOne(cascade = CascadeType.ALL) //save, delete, update, merge, refresh
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public Citizen(Long afm, String name, String surname, String email, String password) {
-        this.afm = afm;
+    public Citizen(Long afm, String username, String name, String surname, String email, String password) {
+        super(afm, username, email, password);
         this.name = name;
         this.surname = surname;
-        this.email = email;
-        this.password = password;
+
     }
 
     public Citizen() {
-    }
-
-    public Long getAfm() {
-        return afm;
-    }
-
-    public void setAfm(Long afm) {
-        this.afm = afm;
     }
 
     public String getName() {
@@ -59,21 +43,6 @@ public class Citizen {
         this.surname = surname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public Cart getCart() {
         return cart;

@@ -1,4 +1,5 @@
 package com.example.eshop.Controllers;
+import com.example.eshop.Services.CitizenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +12,14 @@ import com.example.eshop.Services.CartService;
 public class CartController {
 
     @Autowired
-    CartService cartService;
+    private CitizenService citizenService;
+
+    @Autowired
+    private CartService cartService;
 
     @PostMapping("/buyProductsFromCart")
     public void buyProductsFromCart(@RequestParam Long cartId){
-        cartService.buyProductsFromCart(cartId);
+        citizenService.buyProductsFromCart(cartId);
     }
 
     @DeleteMapping("/removeProductFromCart")
