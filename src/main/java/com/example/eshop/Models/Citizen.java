@@ -9,9 +9,6 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class Citizen extends User{
-
-    @Column(unique = true, nullable = false)
-    private Long afm;
    
     private String name;
     private String surname;
@@ -20,23 +17,14 @@ public class Citizen extends User{
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public Citizen(String username, Long afm, String name, String surname, String email, String password) {
-        super(username, email, password);
-        this.afm = afm;
+    public Citizen(Long afm, String username, String name, String surname, String email, String password) {
+        super(afm, username, email, password);
         this.name = name;
         this.surname = surname;
 
     }
 
     public Citizen() {
-    }
-
-    public Long getAfm() {
-        return afm;
-    }
-
-    public void setAfm(Long afm) {
-        this.afm = afm;
     }
 
     public String getName() {

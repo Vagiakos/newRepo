@@ -19,7 +19,6 @@ public class UserController {
         //call citizen service login method
         return userService.login(
                 //use getters from dto
-                request.getType(),
                 request.getEmail(),
                 request.getPassword()
         );

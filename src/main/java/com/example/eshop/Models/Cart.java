@@ -58,4 +58,12 @@ public class Cart {
     public void addProduct(Product product) {
         this.products.add(product);
     }
+
+    public Citizen getCitizen() {
+        return citizen;
+    }
+
+    public void setCitizen(Citizen citizen) {
+        this.citizen = citizen;
+    }
 }

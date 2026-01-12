@@ -5,6 +5,7 @@ import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.Citizen;
 import com.example.eshop.Models.Shop;
 import com.example.eshop.Models.User;
+import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.CitizenRepository;
 import com.example.eshop.Repositories.ShopRepository;
 import com.example.eshop.Repositories.UserRepository;
@@ -27,30 +28,30 @@ public class UserService {
     @Autowired
     CitizenRepository citizenRepository;
 
+    @Autowired
+    CartRepository cartRepository;
+
     //login method
-    public String login(String typeOfUser, String email, String password) {
+    public String login(String email, String password) {
+
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(!optionalUser.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
 
         User user = optionalUser.get();
-        if(typeOfUser.equals("Shop")){
-            //check password
-            if (!user.getPassword().equals(password)) {
-                //wrong password
-                return "Wrong password";
-            }
-            //successful login
-            return "Shop login successful";
-        }else{
-            //check password
-            if (!user.getPassword().equals(password)) {
-                //wrong password
-                return "Wrong password";
-            }
-            //successful login
-            return "Citizen login successful";
+
+        if (!user.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password");
         }
+
+        if(user.getTypeOfUser().equals("Shop"))
+            return "Shop login successfully";
+        else if (user.getTypeOfUser().equals("Citizen")) {
+            return "Citizen login successfully";
+
+        }
+
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown type of user");
 
 
     }
@@ -81,9 +82,9 @@ public class UserService {
             }
 
             Citizen citizen = new Citizen();
+            citizen.setAfm(registerRequest.getAfm());
             citizen.setUsername(registerRequest.getUsername());
             citizen.settypeOfUser(registerRequest.getTypeOfUser());
-            citizen.setAfm(registerRequest.getAfmCitizen());
             citizen.setName(registerRequest.getName());
             citizen.setSurname(registerRequest.getSurname());
             citizen.setEmail(registerRequest.getEmail());
@@ -91,7 +92,6 @@ public class UserService {
             Cart cart = new Cart();
             citizen.setCart(cart);
             citizenRepository.save(citizen);
-            userRepository.save(citizen);
 
         } else if (registerRequest.getTypeOfUser().equals("Shop")) {
             // Validation email
@@ -110,9 +110,9 @@ public class UserService {
             }
 
             Shop shop = new Shop();
+            shop.setAfm(registerRequest.getAfm());
             shop.setUsername(registerRequest.getUsername());
             shop.settypeOfUser(registerRequest.getTypeOfUser());
-            shop.setAfm(registerRequest.getAfmShop());
             shop.setOwner(registerRequest.getOwner());
             shop.setBrand(registerRequest.getBrandShop());
             shop.setEmail(registerRequest.getEmail());

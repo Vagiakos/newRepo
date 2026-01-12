@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.eshop.Models.Product;
+import com.example.eshop.Models.Shop;
 import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,9 @@ public class CitizenService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CitizenRepository citizenRepository;
 
     //it protects from race conditions (users press buy at the same time)
     //use transactional to rollback the updates (atomic changes)
@@ -53,32 +57,35 @@ public class CitizenService {
 
     }
 
-//    public void addCitizen(Citizen citizen) {
-//
-//    // Validation email
-//    if (citizen.getEmail() == null || !citizen.getEmail().contains("@")) {
-//        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
-//    }
-//
-//    // Validation password
-//    if (citizen.getPassword() == null || citizen.getPassword().length() < 6) {
-//        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters");
-//    }
-//
-//    // Validation name and surname
-//    if (citizen.getName() == null || citizen.getName().isBlank() ||
-//        citizen.getSurname() == null || citizen.getSurname().isBlank()) {
-//        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name and surname cannot be empty");
-//    }
-//
-//    // check if email already exists
-//    if (citizenRepository.findByEmail(citizen.getEmail()).isPresent()) {
-//        throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
-//    }
-//
-//    // create cart automatically when a citizen is registered
-//    Cart cart = new Cart();
-//    citizen.setCart(cart);
-//    citizenRepository.save(citizen); // save citizen with cart (cascade)
-//    }
+
+    public void updateCitizen(Long afm,String username,String email,String name,String surname,String password){
+        Optional<Citizen> optionalCitizen = citizenRepository.findById(afm);
+        if(!optionalCitizen.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found!");
+        Citizen citizen = optionalCitizen.get();
+
+        if(username!=null)
+            citizen.setUsername(username);
+        if(email!=null) {
+            if (email.contains("@"))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+            citizen.setEmail(email);
+        }
+        // check if email already exists
+        if (citizenRepository.findByEmail(email).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
+        }
+        if(name!=null)
+            citizen.setName(name);
+        if(surname!=null)
+            citizen.setSurname(surname);
+
+        if (password != null){
+            if(password.length() < 6)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be 6 character or more");
+            citizen.setPassword(password);
+        }
+
+        citizenRepository.save(citizen);
+    }
 }

@@ -7,8 +7,7 @@ import jakarta.persistence.*;
 public abstract class User {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    private Long afm;
 
     private String username;
     @Column(unique = true, nullable = false)
@@ -17,7 +16,8 @@ public abstract class User {
     private String typeOfUser;
 
 
-    public User(String username, String email, String password) {
+    public User(Long afm, String username, String email, String password) {
+        this.afm = afm;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -26,12 +26,12 @@ public abstract class User {
     public User() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getAfm() {
+        return afm;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAfm(Long afm) {
+        this.afm = afm;
     }
 
     public String getUsername() {

@@ -7,14 +7,13 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String typeOfUser;
+    private Long afm;
 
     //Shop
-    private Long afmShop;
     private String brandShop;
     private String owner;
 
     //Citizen
-    private Long afmCitizen;
     private String name;
     private String surname;
 
@@ -50,14 +49,6 @@ public class RegisterRequest {
         this.typeOfUser = typeOfUser;
     }
 
-    public Long getAfmShop() {
-        return afmShop;
-    }
-
-    public void setAfmShop(Long afmShop) {
-        this.afmShop = afmShop;
-    }
-
     public String getBrandShop() {
         return brandShop;
     }
@@ -74,14 +65,6 @@ public class RegisterRequest {
         this.owner = owner;
     }
 
-    public Long getAfmCitizen() {
-        return afmCitizen;
-    }
-
-    public void setAfmCitizen(Long afmCitizen) {
-        this.afmCitizen = afmCitizen;
-    }
-
     public String getName() {
         return name;
     }
@@ -96,5 +79,13 @@ public class RegisterRequest {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public Long getAfm() {
+        return afm;
+    }
+
+    public void setAfm(Long afm) {
+        this.afm = afm;
     }
 }

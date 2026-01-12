@@ -14,9 +14,6 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Shop extends User{
 
-    @Column(unique = true, nullable = false)
-    private Long afm;
-
     private String brand;
     private String owner;
 
@@ -36,17 +33,14 @@ public class Shop extends User{
     public Shop() {
     }
 
-    public Shop(String username, Long afm, String email, String brand, String owner, String password) {
-        super(username, email, password);
-        this.afm = afm;
+    public Shop(Long afm, String username, String email, String brand, String owner, String password) {
+        super(afm, username, email, password);
         this.brand = brand;
         this.owner = owner;
 
     }
 
-    public Long getAfm() {
-        return afm;
-    }
+
 
     public String getOwner() {
         return owner;
@@ -58,10 +52,6 @@ public class Shop extends User{
 
     public List<Product> getProducts() {
         return products;
-    }
-
-    public void setAfm(Long afm) {
-    this.afm = afm;
     }
 
 
