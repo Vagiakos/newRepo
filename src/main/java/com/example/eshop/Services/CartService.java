@@ -24,7 +24,7 @@ public class CartService {
     @Autowired
     CartRepository cartRepository;
 
-    public void addProductToCart(Long cartId, String brand, int quantity) {
+    public String addProductToCart(Long cartId, String brand, int quantity) {
         //search for cart
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if(!optionalCart.isPresent())
@@ -42,11 +42,15 @@ public class CartService {
             //add products in cart
             for(int i = 0; i < quantity; i++){
                 cart.addProduct(product);
+                
             }
+            
             //update cart price and quantity
             cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
             cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
             cartRepository.save(cart);
+
+            return "Product added";
         }else {
             //if requested quantity > stock
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -76,6 +80,7 @@ public class CartService {
             productRepository.save(p);
         }
 
+        
         cart.clearProducts();
         cart.setPrice(0);
         cart.setTotalQuantity(0);

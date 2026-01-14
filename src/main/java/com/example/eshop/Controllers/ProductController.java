@@ -23,10 +23,10 @@ public class ProductController {
 
 
     @PostMapping("/addProductToCart")
-    public void addProductToCart(@RequestParam  Long cartId,
+    public String addProductToCart(@RequestParam  Long cartId,
                                 @RequestParam String brand,
                                 @RequestParam int quantity){
-        cartService.addProductToCart(cartId, brand, quantity);
+        return cartService.addProductToCart(cartId, brand, quantity);
     }
 
     @GetMapping("/getProduct")

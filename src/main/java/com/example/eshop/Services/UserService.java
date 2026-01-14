@@ -1,5 +1,12 @@
 package com.example.eshop.Services;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.example.eshop.DTOs.RegisterRequest;
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.Citizen;
@@ -9,12 +16,6 @@ import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.CitizenRepository;
 import com.example.eshop.Repositories.ShopRepository;
 import com.example.eshop.Repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @Service
 public class UserService {

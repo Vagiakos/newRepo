@@ -3,11 +3,6 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.eshop.Models.Product;
-import com.example.eshop.Models.Shop;
-import com.example.eshop.Repositories.CartRepository;
-import com.example.eshop.Repositories.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,7 +10,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.Citizen;
+import com.example.eshop.Models.Product;
+import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.CitizenRepository;
+import com.example.eshop.Repositories.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CitizenService {
@@ -56,7 +56,6 @@ public class CitizenService {
         cartRepository.save(cart);
 
     }
-
 
     public void updateCitizen(Long afm,String username,String email,String name,String surname,String password){
         Optional<Citizen> optionalCitizen = citizenRepository.findById(afm);

@@ -3,6 +3,7 @@ package com.example.eshop.Models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,9 @@ public class Cart {
     private double price;
 
     private int totalQuantity; //total number of products
-    private boolean completed;
+    
+    @Column(nullable = false)
+    private boolean completed = false;
 
     @OneToOne(mappedBy = "cart")
     private Citizen citizen;
@@ -31,11 +34,11 @@ public class Cart {
     @JoinTable(
         name = "cart_products",
         joinColumns = @JoinColumn(name = "cart_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_brand")
+        inverseJoinColumns = @JoinColumn(name = "product")
     )
     private List<Product> products = new ArrayList<>();
 
-    public Cart() {
+    public Cart() { 
     }
 
     public Long getId() {
