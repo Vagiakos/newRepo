@@ -2,6 +2,8 @@ package com.example.eshop.Services;
 
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.UserNotFoundException;
+import com.example.eshop.ErrorHandling.WrongPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,12 +39,12 @@ public class UserService {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(!optionalUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+            throw new UserNotFoundException("User not found!");
 
         User user = optionalUser.get();
 
         if (!user.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password");
+            throw new WrongPasswordException("Wrong Password");
         }
 
         if(user.getTypeOfUser().equals("Shop"))
