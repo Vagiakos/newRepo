@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.Models.Cart;
+import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Citizen;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Repositories.CartRepository;
@@ -38,23 +39,28 @@ public class CitizenService {
         if(!optionalCart.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not found");
         Cart cart = optionalCart.get();
-        List<Product> products = cart.getProducts();
+
+        List<CartItem> items = cart.getCartItems();
+
         //if out-of-stock → exception → rollback
-        for(Product p : products){
-            if(p.getQuantity() == 0)
+        for(CartItem item : items){
+            Product p = item.getProduct();
+            if(p.getQuantity() < item.getQuantity())
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, p.getBrand() + " out of stock");
         }
 
-        //we can use Map<Product, Integer> to subtract exactly the amount the user entered
-        for(Product p : products){
-            p.setQuantity(p.getQuantity() - 1);
+        //subtract stock and mark CartItem completed
+        for(CartItem item : items){
+            Product p = item.getProduct();
+            p.setQuantity(p.getQuantity() - item.getQuantity());
             productRepository.save(p);
+
+            item.setCompleted(true);
         }
 
-        cart.clearProducts();
-        cart.setPrice(0);
+        //mark cart completed
+        cart.setCompleted(true);
         cartRepository.save(cart);
-
     }
 
     public void updateCitizen(Long afm,String username,String email,String name,String surname,String password){

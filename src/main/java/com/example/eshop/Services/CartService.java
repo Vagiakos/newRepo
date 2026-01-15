@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.Models.Cart;
+import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.ProductRepository;
@@ -31,7 +32,7 @@ public class CartService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
         Cart cart = optionalCart.get();
     
-        //search for citizen
+        //search for product
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
@@ -39,19 +40,20 @@ public class CartService {
         
         //check stock
         if(product.getQuantity() >= quantity){
-            //add products in cart
-            for(int i = 0; i < quantity; i++){
-                cart.addProduct(product);
-                
-            }
             
+            //create a single CartItem with the requested quantity
+            double totalPrice = Math.round(product.getPrice() * quantity * 100.0) / 100.0;
+            CartItem item = new CartItem(quantity, totalPrice, false, cart, product);
+            cart.addCartItem(item);
+
             //update cart price and quantity
             cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
             cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
+
             cartRepository.save(cart);
 
             return "Product added";
-        }else {
+        } else {
             //if requested quantity > stock
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "Requested quantity exceeds available stock. Only " + product.getQuantity() + " available");
@@ -67,62 +69,74 @@ public class CartService {
         if(!optionalCart.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not found");
         Cart cart = optionalCart.get();
-        List<Product> products = cart.getProducts();
-        //if out-of-stock → exception → rollback
-        for(Product p : products){
-            if(p.getQuantity() == 0)
+
+        List<CartItem> items = cart.getCartItems();
+
+        // check stock for each item
+        for(CartItem item : items){
+            Product p = item.getProduct();
+            if(p.getQuantity() < item.getQuantity())
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, p.getBrand() + " out of stock");
         }
 
-        //we can use Map<Product, Integer> to subtract exactly the amount the user entered
-        for(Product p : products){
-            p.setQuantity(p.getQuantity() - 1);
+        // subtract stock
+        for(CartItem item : items){
+            Product p = item.getProduct();
+            p.setQuantity(p.getQuantity() - item.getQuantity());
             productRepository.save(p);
+
+            // mark item as completed
+            if(item.getQuantity() > 0) {
+                item.setCompleted(true);
+            }
         }
 
-        
-        cart.clearProducts();
-        cart.setPrice(0);
-        cart.setTotalQuantity(0);
+        // mark cart as completed
         cart.setCompleted(true);
         cartRepository.save(cart);
-
     }
 
     public void removeProductFromCart(Long cartId, String brand, int quantity) {
-    // find cart
-    Cart cart = cartRepository.findById(cartId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found"));
+        // find cart
+        Cart cart = cartRepository.findById(cartId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found"));
 
-    // find product
-    Product product = productRepository.findById(brand)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        // find CartItems with this product
+        List<CartItem> items = cart.getCartItems();
+        int removedCount = 0;
 
-    // remove from cart
-    int removedCount = 0; //counter for removed items
-    List<Product> products = cart.getProducts();
-    for (int i = products.size() - 1; i >= 0 && removedCount < quantity; i--) { //LIFO
-        if (products.get(i).getBrand().equals(brand)) {
-            products.remove(i);
-            removedCount++;
+        for(int i = items.size() - 1; i >= 0 && removedCount < quantity; i--) { //LIFO
+            CartItem item = items.get(i);
+            if(item.getProduct().getBrand().equals(brand) && item.getQuantity() > 0){
+                if(item.getQuantity() <= (quantity - removedCount)){
+                    // αφαιρούμε όλη την ποσότητα αλλά κρατάμε το CartItem
+                    removedCount += item.getQuantity();
+                    cart.setPrice(cart.getPrice() - item.getPrice());
+                    cart.setTotalQuantity(cart.getTotalQuantity() - item.getQuantity());
+                    item.setQuantity(0); // quantity = 0
+                    // αφήνουμε το price όπως είναι για ιστορικό
+                } else {
+                    //remove only part of quantity
+                    int reduceAmount = quantity - removedCount;
+                    double unitPrice = item.getPrice() / item.getQuantity(); //price per product
+                    item.setQuantity(item.getQuantity() - reduceAmount);
+                    item.setPrice(unitPrice * item.getQuantity());
+                    cart.setPrice(cart.getPrice() - unitPrice * reduceAmount);
+                    cart.setTotalQuantity(cart.getTotalQuantity() - reduceAmount);
+                    removedCount += reduceAmount;
+                }
+            }
         }
-    }
 
-    if (removedCount > 0) {
-        // refresh cart price (can't be negative)
-        cart.setPrice(Math.max(cart.getPrice() - removedCount * product.getPrice(), 0));
-        // refresh cart total quantity
-        cart.setTotalQuantity(Math.max(cart.getTotalQuantity() - removedCount, 0));
+        if(removedCount > 0){
+            cartRepository.save(cart);
 
-        // if requested quantity > available in cart
-        if (removedCount < quantity) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                "Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
-        }
-
-        cartRepository.save(cart);
+            if(removedCount < quantity){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
+            }
         } else {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not in cart");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not in cart");
         }
     }
 }

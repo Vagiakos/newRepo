@@ -1,13 +1,10 @@
 package com.example.eshop.Models;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -28,9 +25,6 @@ public class Product {
     //product doesnt send shop in JSON (to avoid infinite loop)
     @JsonBackReference 
     private Shop shop;
-
-    @ManyToMany(mappedBy = "products")
-    private List<Cart> carts;
 
     public Product() {
     }

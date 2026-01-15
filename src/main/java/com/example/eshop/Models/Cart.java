@@ -3,14 +3,13 @@ package com.example.eshop.Models;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -30,14 +29,32 @@ public class Cart {
     @OneToOne(mappedBy = "cart")
     private Citizen citizen;
 
-    @ManyToMany
-    @JoinTable(
-        name = "cart_products",
-        joinColumns = @JoinColumn(name = "cart_id"),
-        inverseJoinColumns = @JoinColumn(name = "product")
-    )
-    private List<Product> products = new ArrayList<>();
+    // @ManyToMany
+    // @JoinTable(
+    //     name = "cart_products",
+    //     joinColumns = @JoinColumn(name = "cart_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "product")
+    // )
 
+    //private List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void addCartItem(CartItem item) {
+    cartItems.add(item);
+        item.setCart(this); 
+    }
+
+    public void removeCartItem(CartItem item) {
+        cartItems.remove(item);
+        item.setCart(null);
+    }
+    
     public Cart() { 
     }
 
@@ -53,17 +70,17 @@ public class Cart {
         this.price = price;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
+    // public List<Product> getProducts() {
+    //     return products;
+    // }
 
-    public void clearProducts(){
-        products.clear();
-    }
+    // public void clearProducts(){
+    //     products.clear();
+    // }
 
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
+    // public void addProduct(Product product) {
+    //     this.products.add(product);
+    // }
 
     public int getTotalQuantity() {
         return totalQuantity;
