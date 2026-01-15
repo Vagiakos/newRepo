@@ -109,12 +109,11 @@ public class CartService {
             CartItem item = items.get(i);
             if(item.getProduct().getBrand().equals(brand) && item.getQuantity() > 0){
                 if(item.getQuantity() <= (quantity - removedCount)){
-                    // αφαιρούμε όλη την ποσότητα αλλά κρατάμε το CartItem
+                    // remove amount but keep the CartItem
                     removedCount += item.getQuantity();
                     cart.setPrice(cart.getPrice() - item.getPrice());
                     cart.setTotalQuantity(cart.getTotalQuantity() - item.getQuantity());
                     item.setQuantity(0); // quantity = 0
-                    // αφήνουμε το price όπως είναι για ιστορικό
                 } else {
                     //remove only part of quantity
                     int reduceAmount = quantity - removedCount;
