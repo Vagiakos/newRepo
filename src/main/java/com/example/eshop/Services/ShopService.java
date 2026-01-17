@@ -2,6 +2,9 @@ package com.example.eshop.Services;
 
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.AlreadyExistsException;
+import com.example.eshop.ErrorHandling.InvalidCredentialsException;
+import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,19 +24,19 @@ public class ShopService {
     public void updateShop(Long afm, String username, String email, String brand, String owner, String password){
         Optional<Shop> optionalShop = shopRepository.findById(afm);
         if(!optionalShop.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found!");
+            throw new NotFoundException("Shop not found!");
         Shop shop = optionalShop.get();
 
         if(username!=null)
             shop.setUsername(username);
         if(email!=null) {
             if (!email.contains("@"))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+                throw new InvalidCredentialsException("Invalid Email!");
             shop.setEmail(email);
         }
         // check if email already exists
         if (shopRepository.findByEmail(email).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
+            throw new AlreadyExistsException("Email already exists!");
         }
         if(brand!=null)
             shop.setBrand(brand);
@@ -42,7 +45,7 @@ public class ShopService {
 
         if (password != null){
             if(password.length() < 6)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be 6 character or more");
+                throw new InvalidCredentialsException("Password must be 6 character or more");
             shop.setPassword(password);
         }
 

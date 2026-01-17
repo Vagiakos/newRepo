@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class ProductService {
         List<Product> products = new ArrayList<>();
         Optional<Shop> optionalShop = shopRepository.findById(afm);
         if(!optionalShop.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found");
+            throw new NotFoundException("Shop not found!");
         Shop shop = optionalShop.get();
         List<Product> shopProducts = shop.getProducts();
         for(Product p : shopProducts){
@@ -72,7 +73,7 @@ public class ProductService {
             if(optionalProduct.isPresent())
                 products.add(optionalProduct.get());
             else
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+                throw new NotFoundException("Product not found!");
         }
         return products;
     }

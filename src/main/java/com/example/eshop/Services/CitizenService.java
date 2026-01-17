@@ -3,6 +3,10 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.AlreadyExistsException;
+import com.example.eshop.ErrorHandling.InternalServerException;
+import com.example.eshop.ErrorHandling.InvalidCredentialsException;
+import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -66,19 +70,19 @@ public class CitizenService {
     public void updateCitizen(Long afm,String username,String email,String name,String surname,String password){
         Optional<Citizen> optionalCitizen = citizenRepository.findById(afm);
         if(!optionalCitizen.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found!");
+            throw new NotFoundException("Shop not found!");
         Citizen citizen = optionalCitizen.get();
 
         if(username!=null)
             citizen.setUsername(username);
         if(email!=null) {
             if (email.contains("@"))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+                throw new InvalidCredentialsException("Invalid email!");
             citizen.setEmail(email);
         }
         // check if email already exists
         if (citizenRepository.findByEmail(email).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
+            throw new AlreadyExistsException("Email already exists!");
         }
         if(name!=null)
             citizen.setName(name);
@@ -87,7 +91,7 @@ public class CitizenService {
 
         if (password != null){
             if(password.length() < 6)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be 6 character or more");
+                throw new InvalidCredentialsException("Password must be at least 6 characters");
             citizen.setPassword(password);
         }
 
