@@ -1,6 +1,10 @@
 package com.example.eshop.Models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -14,7 +18,6 @@ public abstract class User {
     private String email;
     private String password;
     private String typeOfUser;
-
 
     public User(Long afm, String username, String email, String password) {
         this.afm = afm;

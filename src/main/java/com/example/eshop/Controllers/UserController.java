@@ -1,12 +1,17 @@
 package com.example.eshop.Controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.DTOs.RegisterRequest;
 import com.example.eshop.Services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin(origins = "http://127.0.0.1:5500") // allow frontend 
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -16,7 +21,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) { //request body contains email and password
-        //call citizen service login method
+        //call user service login method
         return userService.login(
                 //use getters from dto
                 request.getEmail(),
