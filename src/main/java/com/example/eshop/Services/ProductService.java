@@ -82,7 +82,7 @@ public class ProductService {
     public Product getProduct(String brand){
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            throw new NotFoundException("Product not found!");
         Product product = optionalProduct.get();
         return product;
     }
