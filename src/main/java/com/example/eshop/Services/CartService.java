@@ -3,6 +3,8 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.CartQuantityException;
+import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,13 +31,13 @@ public class CartService {
         //search for cart
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if(!optionalCart.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
+            throw new NotFoundException("Cart not found!");
         Cart cart = optionalCart.get();
     
         //search for product
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            throw new NotFoundException("Product not found!");
         Product product = optionalProduct.get();
         
         //check stock
@@ -55,8 +57,8 @@ public class CartService {
             return "Product added";
         } else {
             //if requested quantity > stock
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                "Requested quantity exceeds available stock. Only " + product.getQuantity() + " available");
+            throw new CartQuantityException("Requested quantity exceeds available stock. Only " + product.getQuantity() + " available");
+
         }
     }
 
@@ -67,7 +69,7 @@ public class CartService {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
 
         if(!optionalCart.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not found");
+            throw new NotFoundException("Cart not found!");
         Cart cart = optionalCart.get();
 
         List<CartItem> items = cart.getCartItems();
@@ -76,7 +78,7 @@ public class CartService {
         for(CartItem item : items){
             Product p = item.getProduct();
             if(p.getQuantity() < item.getQuantity())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, p.getBrand() + " out of stock");
+                throw new CartQuantityException(p.getBrand() + " out of stock");
         }
 
         // subtract stock
@@ -99,7 +101,7 @@ public class CartService {
     public void removeProductFromCart(Long cartId, String brand, int quantity) {
         // find cart
         Cart cart = cartRepository.findById(cartId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found"));
+            .orElseThrow(() -> new NotFoundException("Cart not found!"));
 
         // find CartItems with this product
         List<CartItem> items = cart.getCartItems();
@@ -131,11 +133,10 @@ public class CartService {
             cartRepository.save(cart);
 
             if(removedCount < quantity){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
+                throw new CartQuantityException("Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not in cart");
+            throw new NotFoundException("Product not in cart!");
         }
     }
 }

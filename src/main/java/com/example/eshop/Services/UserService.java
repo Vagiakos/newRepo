@@ -2,6 +2,10 @@ package com.example.eshop.Services;
 
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.AlreadyExistsException;
+import com.example.eshop.ErrorHandling.InternalServerException;
+import com.example.eshop.ErrorHandling.NotFoundException;
+import com.example.eshop.ErrorHandling.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,12 +41,12 @@ public class UserService {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(!optionalUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+            throw new NotFoundException("User not found!");
 
         User user = optionalUser.get();
 
         if (!user.getPassword().equals(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password");
+            throw new InvalidCredentialsException("Wrong Password");
         }
 
         if(user.getTypeOfUser().equals("Shop"))
@@ -52,7 +56,7 @@ public class UserService {
 
         }
 
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown type of user");
+        throw new InternalServerException("Unknown Type of User");
 
 
     }
@@ -63,23 +67,23 @@ public class UserService {
         if(registerRequest.getTypeOfUser().equals("Citizen")){
             // Validation email
             if (registerRequest.getEmail() == null || !registerRequest.getEmail().contains("@")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+                throw new InvalidCredentialsException("Invalid email!");
             }
 
             // Validation password
             if (registerRequest.getPassword() == null || registerRequest.getPassword().length() < 6) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters");
+                throw new InvalidCredentialsException("Password must be at least 6 characters");
             }
 
             // Validation name and surname
             if (registerRequest.getName() == null || registerRequest.getName().isBlank() ||
                     registerRequest.getSurname() == null || registerRequest.getSurname().isBlank()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name and surname cannot be empty");
+                throw new InvalidCredentialsException("Surname and name must not be empty!");
             }
 
             // check if email already exists
             if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
+                throw new AlreadyExistsException("Email already exists!");
             }
 
             Citizen citizen = new Citizen();
@@ -97,17 +101,17 @@ public class UserService {
         } else if (registerRequest.getTypeOfUser().equals("Shop")) {
             // Validation email
             if (registerRequest.getEmail() == null || !registerRequest.getEmail().contains("@")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
+                throw new InvalidCredentialsException("Invalid email!");
             }
 
             // Validation password
             if (registerRequest.getPassword() == null || registerRequest.getPassword().length() < 6) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters");
+                throw new InvalidCredentialsException("Password must be at least 6 characters");
             }
 
             // check if email already exists
             if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists!");
+                throw new AlreadyExistsException("Email already exists!");
             }
 
             Shop shop = new Shop();
@@ -121,7 +125,7 @@ public class UserService {
             shopRepository.save(shop);
             userRepository.save(shop);
         }else
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong selected user");
+            throw new InternalServerException("Wrong Selected user!");
 
     }
 }
