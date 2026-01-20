@@ -33,9 +33,6 @@ public class UserService {
     @Autowired
     CitizenRepository citizenRepository;
 
-    @Autowired
-    CartRepository cartRepository;
-
     //login method
     public String login(String email, String password) {
 
@@ -65,6 +62,14 @@ public class UserService {
     public void register(RegisterRequest registerRequest) {
 
         if(registerRequest.getTypeOfUser().equals("Citizen")){
+
+            if (userRepository.findById(registerRequest.getAfm()).isPresent()) {
+                throw new AlreadyExistsException("AFM already exists!");
+            }
+            if (registerRequest.getAfm() == null) {
+                throw new InvalidCredentialsException("Afm cannot be empty!");
+            }
+
             // Validation email
             if (registerRequest.getEmail() == null || !registerRequest.getEmail().contains("@")) {
                 throw new InvalidCredentialsException("Invalid email!");
@@ -99,6 +104,9 @@ public class UserService {
             citizenRepository.save(citizen);
 
         } else if (registerRequest.getTypeOfUser().equals("Shop")) {
+            if (userRepository.findById(registerRequest.getAfm()).isPresent()) {
+                throw new AlreadyExistsException("AFM already exists!");
+            }
             // Validation email
             if (registerRequest.getEmail() == null || !registerRequest.getEmail().contains("@")) {
                 throw new InvalidCredentialsException("Invalid email!");

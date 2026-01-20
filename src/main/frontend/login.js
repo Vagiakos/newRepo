@@ -23,14 +23,13 @@ loginForm.addEventListener("submit", function (event) {
         },
         body: JSON.stringify(loginRequest) //read it as json (Οbject loginRequest -> String)
     })
-    .then(response => {
+    .then(async response => {
         // if backend returns error status
         if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error(text);
-            });
-        }
-        return response.text();
+                const errorData = await response.json();
+                throw new Error(errorData.message); 
+            }
+            return response.text();;
     })
     .then(data => {
         // success
