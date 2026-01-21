@@ -77,7 +77,6 @@ public class ProductService {
         return products;
     }
 
-
     public Product getProduct(String brand){
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
