@@ -1,11 +1,14 @@
 package com.example.eshop.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.Models.Product;
 import com.example.eshop.Services.CartService;
@@ -21,7 +24,6 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-
     @PostMapping("/addProductToCart")
     public String addProductToCart(@RequestParam  Long cartId,
                                 @RequestParam String brand,
@@ -33,4 +35,16 @@ public class ProductController {
     public Product getProduct(@RequestParam String brand){
         return productService.getProduct(brand);
     }
+
+    //update quantity (shop)
+    @PutMapping("/updateQuantity")
+    public String updateProductQuantity(@RequestParam String brand,
+                                        @RequestParam int quantity) {
+        if(quantity < 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
+        }
+
+        return productService.updateProductQuantity(brand, quantity);
+    }
+
 }

@@ -45,8 +45,4 @@ public class CitizenController {
                               @RequestParam(required = false) String password){
         citizenService.updateCitizen(afm, username,email,name, surname, password);
     }
-
-
-
-
 }

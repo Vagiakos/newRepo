@@ -28,7 +28,6 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart; // many CartItems can reference the same Cart(same cart_id)
 
-
     @ManyToOne
     @JoinColumn(name = "product_brand")
     private Product product; // many CartItems can reference the same Product(same brand)

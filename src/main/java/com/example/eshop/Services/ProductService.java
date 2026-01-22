@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Models.Shop;
 import com.example.eshop.Repositories.ProductRepository;
@@ -63,7 +64,7 @@ public class ProductService {
         List<Product> products = new ArrayList<>();
         Optional<Shop> optionalShop = shopRepository.findById(afm);
         if(!optionalShop.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shop not found");
+            throw new NotFoundException("Shop not found!");
         Shop shop = optionalShop.get();
         List<Product> shopProducts = shop.getProducts();
         for(Product p : shopProducts){
@@ -72,7 +73,7 @@ public class ProductService {
             if(optionalProduct.isPresent())
                 products.add(optionalProduct.get());
             else
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+                throw new NotFoundException("Product not found!");
         }
         return products;
     }
@@ -80,12 +81,30 @@ public class ProductService {
     public Product getProduct(String brand){
         Optional<Product> optionalProduct = productRepository.findById(brand);
         if(!optionalProduct.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            throw new NotFoundException("Product not found!");
         Product product = optionalProduct.get();
         return product;
     }
 
     public void addProduct(Product product){
         productRepository.save(product);
+    }
+
+    public String updateProductQuantity(String brand, int quantity) {
+        // find product
+        Product product = productRepository.findById(brand) 
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        product.setQuantity(quantity);   // update quantity
+        productRepository.save(product); // save
+        
+        return "Product '" + brand + "' quantity updated to " + quantity;
+    }
+
+    //delete product from shop 
+    public void deleteShopProduct(String brand) {
+        Product product = productRepository.findById(brand) // find product
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+        // delete from db
+        productRepository.delete(product);
     }
 }

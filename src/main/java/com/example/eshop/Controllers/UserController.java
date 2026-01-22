@@ -11,7 +11,7 @@ import com.example.eshop.DTOs.LoginRequest;
 import com.example.eshop.DTOs.RegisterRequest;
 import com.example.eshop.Services.UserService;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // allow frontend 
+@CrossOrigin(origins = "*") // allow frontend
 @RestController
 @RequestMapping("/user")
 public class UserController {
