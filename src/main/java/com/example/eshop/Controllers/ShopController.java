@@ -2,6 +2,7 @@ package com.example.eshop.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import com.example.eshop.Models.Product;
 import com.example.eshop.Services.ProductService;
 import com.example.eshop.Services.ShopService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/shops")
 public class ShopController {

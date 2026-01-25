@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Page</title>
-</head>
-<body>
-    <h1>Shop Page</h1>
-    
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop page</title>
+        <link rel="stylesheet" href="stylepage.css">
+    </head>
+    <body>
+
+        <h1>Shop page</h1>
+
+        <!--  add product  -->
+        <section>
+            <h2>Add New Product</h2>
+
+            <form id="addProductForm">
+                <!--  inputs  -->
+                <input type="text" id="brand" placeholder="Brand (unique)" required>
+                <input type="text" id="type" placeholder="Type" required>
+                <input type="text" id="description" placeholder="Description">
+                <input type="number" id="price" placeholder="Price" required>
+                <input type="number" id="quantity" placeholder="Quantity" required>
+
+                <button type="submit">Add Product</button>
+            </form>
+
+            <p id="addMessage">...</p> <!-- for add-messages -->
+        </section>
+
+        <hr>
+
+        <!-- products -->
+        <section>
+            <h2>Shop Products</h2>
+            <div id="productsContainer"></div>
+        </section>
+
+        <script src="shop.js"></script>
+    </body>
 </html>
