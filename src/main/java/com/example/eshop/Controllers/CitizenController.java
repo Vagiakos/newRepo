@@ -11,6 +11,7 @@ import com.example.eshop.Models.Product;
 import com.example.eshop.Services.CitizenService;
 import com.example.eshop.Services.ProductService;
 
+@CrossOrigin(origins = "*") // allow frontend
 @RestController
 @RequestMapping("/citizens") 
 public class CitizenController {

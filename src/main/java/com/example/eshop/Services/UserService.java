@@ -34,7 +34,7 @@ public class UserService {
     CitizenRepository citizenRepository;
 
     //login method
-    public String login(String email, String password) {
+    public User login(String email, String password) {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(!optionalUser.isPresent())
@@ -46,14 +46,7 @@ public class UserService {
             throw new InvalidCredentialsException("Wrong Password");
         }
 
-        if(user.getTypeOfUser().equals("Shop"))
-            return "Shop login successfully";
-        else if (user.getTypeOfUser().equals("Citizen")) {
-            return "Citizen login successfully";
-
-        }
-
-        throw new InternalServerException("Unknown Type of User");
+        return user;
 
 
     }

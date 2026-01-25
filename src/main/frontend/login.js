@@ -23,36 +23,39 @@ loginForm.addEventListener("submit", function (event) {
         },
         body: JSON.stringify(loginRequest) //read it as json (Οbject loginRequest -> String)
     })
-    .then(async response => {
-        // if backend returns error status
-        if (!response.ok) {
+        .then(async response => {
+            // if backend returns error status
+            if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message); 
+                throw new Error(errorData.message);
             }
-            return response.text();;
-    })
-    .then(data => {
-        // success
-        message.textContent = "Successful login";
-        
-        // recognize role from the backend message
-        if (data.includes("Shop")) {
-            localStorage.setItem("role", "Shop");
-        } else {
-            localStorage.setItem("role", "Citizen");
-        }
+            return response.json();;
+        })
+        .then(data => {
+            // success
+            message.textContent = "Successful login";
+            // recognize role from the backend message
+            if (data.typeOfUser === "Shop") {
+                //delay 3 sec before redirect
+                setTimeout(() => {
+                    // navigate to main page
+                    window.location.href = "shop.html";
+                }, 3000);
+            } else {               //delay 3 sec before redirect
+                setTimeout(() => {
+                    // navigate to main page
+                    window.location.href = "citizen.html";
+                }, 1000);
+            }
 
-        localStorage.setItem("email", email);
+            localStorage.setItem("role", data.typeOfUser);
+            localStorage.setItem("afm", data.afm);
+            localStorage.setItem("cartId", data.cart.id);
+            localStorage.setItem("email", email);
 
-        //delay 3 sec before redirect
-        setTimeout(() => {
-            // navigate to main page
-            window.location.href = "main.html";
-        }, 3000); 
-
-    })
-    .catch(error => {
-        // error from backend
-        message.textContent = error.message;
-    });
+        })
+        .catch(error => {
+            // error from backend
+            message.textContent = error.message;
+        });
 });

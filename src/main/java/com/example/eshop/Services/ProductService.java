@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.DTOs.CartItemDTO;
+import com.example.eshop.Models.Cart;
+import com.example.eshop.Models.CartItem;
+import com.example.eshop.Repositories.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -24,6 +28,9 @@ public class ProductService {
 
     @Autowired
     ShopRepository shopRepository;
+
+    @Autowired
+    CartRepository cartRepository;
 
     public List<Product> getProductsByFilters(String brand, String type, Double priceMin, Double priceMax, Long shop_afm) {
 
@@ -106,5 +113,13 @@ public class ProductService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         // delete from db
         productRepository.delete(product);
+    }
+
+    public List<CartItemDTO> getCartProducts(Long cartId){
+        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+        if (!optionalCart.isPresent())
+            throw new NotFoundException("Cart not found!");
+        Cart cart = optionalCart.get();
+        return cart.getCartItems().stream().map(CartItemDTO::new).toList();
     }
 }

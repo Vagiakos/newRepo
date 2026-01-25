@@ -1,0 +1,36 @@
+.product-Card{
+    display: inline-block;
+    width: 200px;
+    border-radius: 10px;
+    background-color: aquamarine;
+    box-shadow: 0 10px 25px black;
+    margin: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.product-Card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.go-to-cart{
+    display: block;
+    margin-top: 10px;
+}
+
+.product-to-cart{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: aquamarine;
+    box-shadow: 0 10px 25px black;
+}

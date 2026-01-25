@@ -1,5 +1,6 @@
 package com.example.eshop.Controllers;
 
+import com.example.eshop.Models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) { //request body contains email and password
+    public User login(@RequestBody LoginRequest request) { //request body contains email and password
         //call user service login method
         return userService.login(
                 //use getters from dto

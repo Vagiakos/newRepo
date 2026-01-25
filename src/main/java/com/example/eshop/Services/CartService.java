@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.eshop.ErrorHandling.CartQuantityException;
+import com.example.eshop.ErrorHandling.InternalServerException;
 import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,31 +30,39 @@ public class CartService {
 
     public String addProductToCart(Long cartId, String brand, int quantity) {
         //search for cart
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
-        if(!optionalCart.isPresent())
-            throw new NotFoundException("Cart not found!");
-        Cart cart = optionalCart.get();
-    
-        //search for product
-        Optional<Product> optionalProduct = productRepository.findById(brand);
-        if(!optionalProduct.isPresent())
-            throw new NotFoundException("Product not found!");
-        Product product = optionalProduct.get();
-        
-        //check stock
-        if(product.getQuantity() >= quantity){
-            
-            //create a single CartItem with the requested quantity
-            double totalPrice = Math.round(product.getPrice() * quantity * 100.0) / 100.0;
-            CartItem item = new CartItem(quantity, totalPrice, false, cart, product);
-            cart.addCartItem(item);
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NotFoundException("Cart not found"));
 
-            //update cart price and quantity
-            cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
+        Product product = productRepository.findById(brand)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+        CartItem cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getBrand().equals(brand))
+                .filter(item -> !item.isCompleted())
+                .findFirst()
+                .orElse(null);
+
+        int quantityitem = 0;
+        if(cartItem != null){
+            quantityitem = cartItem.getQuantity();
+        }
+        //check stock
+        if(product.getQuantity() > quantityitem){
+
+            if (cartItem != null) {
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            } else {
+                cartItem = new CartItem();
+                cartItem.setProduct(product);
+                cartItem.setCart(cart);
+                cartItem.setQuantity(quantity);
+                cartItem.setPrice(product.getPrice());
+                cart.addCartItem(cartItem);
+            }
+
             cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
+            cart.setPrice(cart.getPrice() + product.getPrice() * quantity);
 
             cartRepository.save(cart);
-
             return "Product added";
         } else {
             //if requested quantity > stock
@@ -99,44 +108,31 @@ public class CartService {
     }
 
     public void removeProductFromCart(Long cartId, String brand, int quantity) {
-        // find cart
         Cart cart = cartRepository.findById(cartId)
-            .orElseThrow(() -> new NotFoundException("Cart not found!"));
+                .orElseThrow(() -> new NotFoundException("Cart not found"));
 
-        // find CartItems with this product
-        List<CartItem> items = cart.getCartItems();
-        int removedCount = 0;
-
-        for(int i = items.size() - 1; i >= 0 && removedCount < quantity; i--) { //LIFO
-            CartItem item = items.get(i);
-            if(item.getProduct().getBrand().equals(brand) && item.getQuantity() > 0){
-                if(item.getQuantity() <= (quantity - removedCount)){
-                    // remove amount but keep the CartItem
-                    removedCount += item.getQuantity();
-                    cart.setPrice(cart.getPrice() - item.getPrice());
-                    cart.setTotalQuantity(cart.getTotalQuantity() - item.getQuantity());
-                    item.setQuantity(0); // quantity = 0
-                } else {
-                    //remove only part of quantity
-                    int reduceAmount = quantity - removedCount;
-                    double unitPrice = item.getPrice() / item.getQuantity(); //price per product
-                    item.setQuantity(item.getQuantity() - reduceAmount);
-                    item.setPrice(unitPrice * item.getQuantity());
-                    cart.setPrice(cart.getPrice() - unitPrice * reduceAmount);
-                    cart.setTotalQuantity(cart.getTotalQuantity() - reduceAmount);
-                    removedCount += reduceAmount;
-                }
-            }
+        if (cart.isCompleted()) {
+            throw new InternalServerException("Completed cart");
         }
 
-        if(removedCount > 0){
-            cartRepository.save(cart);
+        CartItem cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getBrand().equals(brand))
+                .filter(item -> !item.isCompleted())
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Product not in cart"));
 
-            if(removedCount < quantity){
-                throw new CartQuantityException("Requested quantity exceeds quantity in cart. Only " + removedCount + " removed");
-            }
+        if (quantity >= cartItem.getQuantity()) {
+            cart.setTotalQuantity(cart.getTotalQuantity() - cartItem.getQuantity());
+            cart.setPrice(cart.getPrice() - cartItem.getPrice() * cartItem.getQuantity());
+
+            cart.getCartItems().remove(cartItem);
+
         } else {
-            throw new NotFoundException("Product not in cart!");
+            cartItem.setQuantity(cartItem.getQuantity() - quantity);
+            cart.setTotalQuantity(cart.getTotalQuantity() - quantity);
+            cart.setPrice(cart.getPrice() - cartItem.getPrice() * quantity);
         }
+
+        cartRepository.save(cart);
     }
 }
