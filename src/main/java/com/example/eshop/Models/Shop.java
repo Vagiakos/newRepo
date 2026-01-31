@@ -6,9 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -16,7 +14,6 @@ public class Shop extends User{
 
     private String brand;
     private String owner;
-
 
     @OneToMany(
         mappedBy = "shop",
@@ -39,8 +36,6 @@ public class Shop extends User{
         this.owner = owner;
 
     }
-
-
 
     public String getOwner() {
         return owner;

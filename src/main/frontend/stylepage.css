@@ -1,36 +1,44 @@
+/* Τίτλοι H1 και H2 */
+h1, h2 {
+    color: #1e3a8a;       /* ίδιο μπλε με το login */
+    text-align: center;   /* κεντράρισμα */
+    letter-spacing: 1px;  /* για κομψότητα */
+    margin-bottom: 20px;  /* λίγο spacing από κάτω */
+}
+
+/* Κάρτες προϊόντων */
 .product-Card{
     display: inline-block;
     width: 200px;
     border-radius: 10px;
-    background-color: aquamarine;
-    box-shadow: 0 10px 25px black;
+    background-color: #e0f7fa; /* πιο απαλό και ομοιόμορφο με το background */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     margin: 20px;
     text-align: center;
     cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
 .product-Card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-6px) scale(1.03); /* λίγο zoom για ζωντάνια */
+  box-shadow: 0 18px 40px rgba(0, 58, 138, 0.3);
+  background-color: #b2ebf2; /* πιο έντονο highlight στο hover */
 }
 
-.card-link {
-  text-decoration: none;
-  color: inherit;
-  display: inline-block;
-}
-
-.go-to-cart{
-    display: block;
-    margin-top: 10px;
-}
-
+/* Κουμπί ή ενότητες μέσα στις κάρτες */
 .product-to-cart{
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 10px;
     border-radius: 10px;
-    background-color: aquamarine;
-    box-shadow: 0 10px 25px black;
+    background-color: #e0f7fa; /* ταιριάζει με την κάρτα */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 8px 12px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.product-to-cart:hover {
+    background-color: #b2ebf2;
+    box-shadow: 0 12px 30px rgba(0,58,138,0.25);
 }

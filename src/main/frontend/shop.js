@@ -1,33 +1,66 @@
 const afm = localStorage.getItem("afm"); // get shop afm from localStorage (saved at login)
-const container = document.getElementById("productsContainer"); 
-const addForm = document.getElementById("addProductForm"); 
-const addMsg = document.getElementById("addMessage"); 
+const container = document.getElementById("productsContainer");
+const addForm = document.getElementById("addProductForm");
+const addMsg = document.getElementById("addMessage");
+
+// if afm is missing -> avoid broken requests (afm=null)
+console.log("AFM from localStorage:", afm); // debug
+if (!afm) {
+    alert("AFM not found. Please login again.");
+    window.location.href = "login.html"; // change if your login page has different name
+}
 
 // load all products for this shop
 async function loadProducts() {
     try {
-        const res = await fetch(`http://localhost:8080/shops/getProductsFromShop?afm=${afm}`);
+        const res = await fetch(`http://localhost:8080/shops/getProductsFromShop?afm=${encodeURIComponent(afm)}`);
         if (!res.ok) throw new Error(await res.text());
 
         const products = await res.json(); // json to js object/array
         console.log("Products from backend:", products); // debug
+
         container.innerHTML = ""; // clear container
 
-        products.forEach(p => { //for every product cart 
-            const card = document.createElement("div"); //new div
+        // if backend returns something unexpected
+        if (!Array.isArray(products)) {
+            throw new Error("Backend did not return a product list.");
+        }
+
+        products.forEach(p => { // for every product cart
+            // safety check
+            if (!p || !p.brand) return;
+
+            const card = document.createElement("div"); // new div
             card.className = "product-Card";
+
+            // create unique id for label/input connection
+            const qtyId = `qty-${String(p.brand).replace(/\s+/g, "_")}`;
+
             card.innerHTML = `
                 <h3>${p.brand}</h3>
-                <p>Type: ${p.type}</p>
-                <p>Description: ${p.description}</p>
-                <p>Price: ${p.price} €</p>
-                <label>Quantity:</label>
-                <input type="number" min="0" value="${p.quantity}" class="qty-input">
-                <button class="update-btn">Update</button>
-                <button class="delete-btn">Delete</button>
+                <p>Type: ${p.type ?? ""}</p>
+                <p>Description: ${p.description ?? ""}</p>
+                <p>Price: ${p.price ?? 0} €</p>
+
+                <label for="${qtyId}">Quantity:</label>
+                <input 
+                    id="${qtyId}" 
+                    name="quantity"
+                    type="number" 
+                    min="0" 
+                    value="${p.quantity ?? 0}" 
+                    class="qty-input"
+                >
+
+                <button class="update-btn" type="button">Update</button>
+                <button class="delete-btn" type="button">Delete</button>
             `;
-            card.querySelector(".update-btn").onclick = () => updateQuantity(p.brand, card.querySelector(".qty-input").value);
-            card.querySelector(".delete-btn").onclick = () => deleteProduct(p.brand);
+
+            card.querySelector(".update-btn").onclick = () =>
+                updateQuantity(p.brand, card.querySelector(".qty-input").value);
+
+            card.querySelector(".delete-btn").onclick = () =>
+                deleteProduct(p.brand);
 
             container.appendChild(card);
         });
@@ -39,14 +72,15 @@ async function loadProducts() {
 
 // add product
 addForm.addEventListener("submit", async e => {
-    e.preventDefault(); 
-    const product = { //object product with all input fields
+    e.preventDefault();
+
+    const product = { // object product with all input fields
         brand: document.getElementById("brand").value,
         type: document.getElementById("type").value,
         description: document.getElementById("description").value,
-        price: document.getElementById("price").value,
-        quantity: document.getElementById("quantity").value,
-        shop: { afm } //shop afm
+        price: Number(document.getElementById("price").value),
+        quantity: Number(document.getElementById("quantity").value),
+        shop: { afm } // shop afm
     };
 
     try {
@@ -55,6 +89,7 @@ addForm.addEventListener("submit", async e => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(product)
         });
+
         if (!res.ok) throw new Error(await res.text());
 
         addMsg.textContent = "Product added successfully!";
@@ -67,10 +102,17 @@ addForm.addEventListener("submit", async e => {
 
 // update quantity
 async function updateQuantity(brand, quantity) {
-    if (quantity < 0 || quantity === "") return alert("Invalid quantity");
+    const qty = Number(quantity);
+
+    if (!brand) return alert("Invalid product brand");
+    if (Number.isNaN(qty) || qty < 0) return alert("Invalid quantity");
 
     try {
-        const res = await fetch(`http://localhost:8080/products/updateQuantity?brand=${brand}&quantity=${quantity}`, { method: "PUT" });
+        const res = await fetch(
+            `http://localhost:8080/products/updateQuantity?brand=${encodeURIComponent(brand)}&quantity=${qty}`,
+            { method: "PUT" }
+        );
+
         if (!res.ok) throw new Error(await res.text());
         loadProducts();
     } catch (e) {
@@ -80,10 +122,15 @@ async function updateQuantity(brand, quantity) {
 
 // delete product
 async function deleteProduct(brand) {
-    if (!confirm("Are you sure?")) return; 
+    if (!brand) return alert("Invalid product brand");
+    if (!confirm("Are you sure?")) return;
 
     try {
-        const res = await fetch(`http://localhost:8080/shops/deleteProduct?brand=${brand}`, { method: "DELETE" });
+        const res = await fetch(
+            `http://localhost:8080/shops/deleteProduct?brand=${encodeURIComponent(brand)}`,
+            { method: "DELETE" }
+        );
+
         if (!res.ok) throw new Error(await res.text());
         loadProducts();
     } catch (e) {

@@ -3,15 +3,14 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.eshop.ErrorHandling.AlreadyExistsException;
-import com.example.eshop.ErrorHandling.InternalServerException;
-import com.example.eshop.ErrorHandling.InvalidCredentialsException;
-import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.eshop.ErrorHandling.AlreadyExistsException;
+import com.example.eshop.ErrorHandling.InvalidCredentialsException;
+import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Citizen;
@@ -63,7 +62,7 @@ public class CitizenService {
         }
 
         //mark cart completed
-        cart.setCompleted(true);
+        //cart.setCompleted(true);
         cartRepository.save(cart);
     }
 

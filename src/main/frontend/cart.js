@@ -12,6 +12,8 @@ async function getProductsFromCart(cartID) {
         const result = await response.json();
         if (result.length == 0) {
             document.querySelector("h1").insertAdjacentHTML("afterend", "<p>Empty cart!</p>");
+            "afterend",
+            "<p id='empty-cart'>Empty cart!</p>"
             return;
         }
         result.forEach(element => {

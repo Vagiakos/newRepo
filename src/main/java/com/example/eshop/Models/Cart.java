@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,8 +22,8 @@ public class Cart {
 
     private int totalQuantity; //total number of products
     
-    @Column(nullable = false)
-    private boolean completed = false;
+    // @Column(nullable = false)
+    // private boolean completed = false;
 
     @OneToOne(mappedBy = "cart")
     private Citizen citizen;
@@ -90,11 +89,11 @@ public class Cart {
         this.totalQuantity = totalQuantity;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
+    //public boolean isCompleted() {
+        //return completed;
+    //}
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
+    //public void setCompleted(boolean completed) {
+        //this.completed = completed;
+    //}
 }

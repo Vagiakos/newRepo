@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.eshop.DTOs.CartItemDTO;
-import com.example.eshop.Models.Cart;
-import com.example.eshop.Models.CartItem;
-import com.example.eshop.Repositories.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.eshop.DTOs.CartItemDTO;
 import com.example.eshop.ErrorHandling.NotFoundException;
+import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Models.Shop;
+import com.example.eshop.Repositories.CartRepository;
 import com.example.eshop.Repositories.ProductRepository;
 import com.example.eshop.Repositories.ShopRepository;
 
@@ -114,7 +113,8 @@ public class ProductService {
         // delete from db
         productRepository.delete(product);
     }
-
+    
+    // check if cart is empty 
     public List<CartItemDTO> getCartProducts(Long cartId){
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if (!optionalCart.isPresent())

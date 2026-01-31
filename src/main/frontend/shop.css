@@ -1,0 +1,74 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+
+h1, h2 {
+    color: #1e3a8a;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+form#addProductForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    width: 350px;
+}
+
+form#addProductForm input[type="text"],
+form#addProductForm input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+form#addProductForm input[type="text"]:focus,
+form#addProductForm input[type="number"]:focus {
+    border-color: #1e3a8a;
+    box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
+    outline: none;
+}
+
+form#addProductForm button {
+    padding: 12px;
+    background-color: #1e3a8a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form#addProductForm button:hover {
+    background-color: #3b5ede;
+    transform: translateY(-2px);
+}
+
+#addMessage {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+hr {
+    width: 80%;
+    margin: 40px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}

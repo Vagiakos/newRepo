@@ -1,13 +1,18 @@
 package com.example.eshop;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.Citizen;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Models.Shop;
-import com.example.eshop.Repositories.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import com.example.eshop.Repositories.CartRepository;
+import com.example.eshop.Repositories.CitizenRepository;
+import com.example.eshop.Repositories.ProductRepository;
+import com.example.eshop.Repositories.ShopRepository;
+import com.example.eshop.Repositories.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {

@@ -29,7 +29,7 @@ loginForm.addEventListener("submit", function (event) {
                 const errorData = await response.json();
                 throw new Error(errorData.message);
             }
-            return response.json();;
+            return response.json();
         })
         .then(data => {
             // success

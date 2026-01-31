@@ -3,14 +3,11 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.eshop.ErrorHandling.CartQuantityException;
-import com.example.eshop.ErrorHandling.InternalServerException;
-import com.example.eshop.ErrorHandling.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.example.eshop.ErrorHandling.CartQuantityException;
+import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Product;
@@ -41,12 +38,8 @@ public class CartService {
                 .findFirst()
                 .orElse(null);
 
-        int quantityitem = 0;
-        if(cartItem != null){
-            quantityitem = cartItem.getQuantity();
-        }
         //check stock
-        if(product.getQuantity() > quantityitem){
+        if(product.getQuantity() > quantity){ 
 
             if (cartItem != null) {
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
@@ -103,7 +96,7 @@ public class CartService {
         }
 
         // mark cart as completed
-        cart.setCompleted(true);
+        //cart.setCompleted(true);
         cartRepository.save(cart);
     }
 
@@ -111,9 +104,9 @@ public class CartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException("Cart not found"));
 
-        if (cart.isCompleted()) {
-            throw new InternalServerException("Completed cart");
-        }
+        //if (cart.isCompleted()) {
+            //throw new InternalServerException("Completed cart");
+        //}
 
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getBrand().equals(brand))
