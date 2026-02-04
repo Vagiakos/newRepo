@@ -40,17 +40,17 @@ loginForm.addEventListener("submit", function (event) {
                 setTimeout(() => {
                     // navigate to main page
                     window.location.href = "shop.html";
-                }, 3000);
+                }, 500);
             } else {               //delay 3 sec before redirect
                 setTimeout(() => {
                     // navigate to main page
                     window.location.href = "citizen.html";
-                }, 1000);
+                    localStorage.setItem("cartId", data.cart.id);
+                }, 500);
             }
 
             localStorage.setItem("role", data.typeOfUser);
             localStorage.setItem("afm", data.afm);
-            localStorage.setItem("cartId", data.cart.id);
             localStorage.setItem("email", email);
 
         })

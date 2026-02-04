@@ -3,6 +3,7 @@ package com.example.eshop.Models;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ public class CartItem {
     
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonBackReference
+    @JsonBackReference("relation1")
     private Cart cart; // many CartItems can reference the same Cart(same cart_id)
     
     @ManyToOne
