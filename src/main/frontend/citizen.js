@@ -38,6 +38,10 @@ async function getAllProducts(brandValue, typeValue, minVal, maxVal, afmValue) {
             price.innerHTML = element.price;
             const quantity = document.createElement("p");
             quantity.innerHTML = element.quantity;
+
+            const container = document.createElement("div");
+            container.appendChild(productCard);
+            container.className="containerProduct";
             productCard.appendChild(header);
             productCard.appendChild(brand);
             productCard.appendChild(type);
@@ -47,6 +51,8 @@ async function getAllProducts(brandValue, typeValue, minVal, maxVal, afmValue) {
             navigator.appendChild(productCard);
             const h1 = document.querySelector("h1");
             h1.insertAdjacentElement("afterend", navigator);
+
+
         });
 
 
