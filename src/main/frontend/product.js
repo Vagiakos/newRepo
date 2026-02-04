@@ -1,4 +1,5 @@
 const productId = localStorage.getItem("brand");
+const addMsg = document.getElementById("addMessage");
 ProductDetails(productId);
 async function ProductDetails(productId) {
     try {
@@ -60,12 +61,12 @@ async function ProductDetails(productId) {
                 const response = await fetch("http://localhost:8080/products/addProductToCart?cartId=" + cartId + "&brand=" + productId + "&quantity=" + quantity, { method: "POST" });
 
                 if (!response.ok) {
-                    const errorData = await response.text();
-                    throw new Error(errorData);
+                    const errorData = await response.json();
+                    throw new Error(errorData.message);
                 }
-                console.log("Product added to cart");
+                addMsg.textContent = "Product added to cart";
             } catch (error) {
-                console.log(error.message);
+                addMsg.textContent = error.message;
             }
         });
 

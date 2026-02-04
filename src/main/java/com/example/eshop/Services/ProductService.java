@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.NegativePriceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -93,6 +94,9 @@ public class ProductService {
     }
 
     public void addProduct(Product product){
+        if(product.getPrice() < 0){
+            throw new NegativePriceException("Invalid price");
+        }
         productRepository.save(product);
     }
 

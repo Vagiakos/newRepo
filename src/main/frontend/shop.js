@@ -90,7 +90,10 @@ addForm.addEventListener("submit", async e => {
             body: JSON.stringify(product)
         });
 
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message);
+        }
 
         addMsg.textContent = "Product added successfully!";
         addForm.reset();

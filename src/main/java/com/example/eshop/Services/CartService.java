@@ -3,6 +3,7 @@ package com.example.eshop.Services;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.eshop.ErrorHandling.InternalServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class CartService {
     @Autowired
     CartRepository cartRepository;
 
+    @Transactional
     public String addProductToCart(Long cartId, String brand, int quantity) {
         //search for cart
         Cart cart = cartRepository.findById(cartId)
@@ -38,8 +40,13 @@ public class CartService {
                 .findFirst()
                 .orElse(null);
 
+
+        int quantity_helper = quantity;
+        if (cartItem != null) {
+            quantity_helper = quantity_helper + cartItem.getQuantity();
+        }
         //check stock
-        if(product.getQuantity() > quantity){ 
+        if(product.getQuantity() >= quantity_helper){
 
             if (cartItem != null) {
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
@@ -74,7 +81,12 @@ public class CartService {
             throw new NotFoundException("Cart not found!");
         Cart cart = optionalCart.get();
 
+
         List<CartItem> items = cart.getCartItems();
+
+        if (items.isEmpty()) {
+            throw new InternalServerException("Cart is empty");
+        }
 
         // check stock for each item
         for(CartItem item : items){
@@ -100,6 +112,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Transactional
     public void removeProductFromCart(Long cartId, String brand, int quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException("Cart not found"));

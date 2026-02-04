@@ -2,10 +2,11 @@ package com.example.eshop.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -25,6 +26,10 @@ public class Product {
     //product doesnt send shop in JSON (to avoid infinite loop)
     @JsonBackReference 
     private Shop shop;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CartItem> cartItems = new ArrayList<>();
 
     public Product() {
     }

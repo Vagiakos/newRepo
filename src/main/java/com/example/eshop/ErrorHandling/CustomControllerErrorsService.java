@@ -40,6 +40,12 @@ public class CustomControllerErrorsService {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
     }
 
+    @ExceptionHandler(NegativePriceException.class)
+    public ResponseEntity<ErrorResponse> negativePriceException(Exception e){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
+    }
+
 
 
 
