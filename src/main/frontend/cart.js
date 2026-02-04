@@ -1,19 +1,25 @@
 const cartID = localStorage.getItem("cartId");
+const messageSuccess = document.getElementById("message");
 getProductsFromCart(cartID);
 
 async function getProductsFromCart(cartID) {
     try {
         const response = await fetch("http://localhost:8080/cart/getCartProducts?cartId=" + cartID);
+        const result = await response.json();
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
+            throw new Error(result.message);
         }
 
-        const result = await response.json();
-        if (result.length == 0) {
-            document.querySelector("h1").insertAdjacentHTML("afterend", "<p>Empty cart!</p>");
-            "afterend",
-            "<p id='empty-cart'>Empty cart!</p>"
+
+        if (result.length === 0) {
+            const h1 = document.querySelector("h1");
+
+            if (!document.getElementById("empty-cart")) {
+                h1.insertAdjacentHTML(
+                    "afterend",
+                    "<p id='empty-cart'>Empty cart!</p>"
+                );
+            }
             return;
         }
         result.forEach(element => {
@@ -49,6 +55,7 @@ async function getProductsFromCart(cartID) {
                         const errorData = await response.json();
                         throw new Error(errorData.message);
                     }
+
 
 
                     quantity--;
@@ -96,6 +103,9 @@ async function getProductsFromCart(cartID) {
                         const errorData = await response.json();
                         throw new Error(errorData.message);
                     }
+
+                    messageSuccess.textContent = "Product Removed Successfully";
+
                     productCard.remove();
                 } catch (error) {
                     console.log(error.message);
@@ -115,7 +125,7 @@ async function getProductsFromCart(cartID) {
 
         });
     } catch (error) {
-        console.error(error.message);
+        message.textContent = error.message;
     }
 
 }
@@ -128,11 +138,15 @@ buybutton.addEventListener("click", async () => {
             const errorData = await response.json();
             throw new Error(errorData.message);
         }
+
+        console.log(response);
+        messageSuccess.textContent = "Products purchased Successfully";
+
         document.querySelectorAll(".product-to-cart").forEach(el => el.remove());
 
 
 
-    }catch(error){
+    } catch (error) {
         console.log(error.message);
     }
 });

@@ -1,5 +1,6 @@
 package com.example.eshop.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,44 +74,90 @@ public class CartService {
 
     //it protects from race conditions (users press buy at the same time)
     //use transactional to rollback the updates (atomic changes)
+//    @Transactional
+//    public void buyProductsFromCart(Long cartId) {
+//        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+//
+//        if(!optionalCart.isPresent())
+//            throw new NotFoundException("Cart not found!");
+//        Cart cart = optionalCart.get();
+//
+//
+//        List<CartItem> items = cart.getCartItems();
+//        if (items.isEmpty()) {
+//            throw new NotFoundException("Cart is empty!");
+//        }
+//
+//        boolean hasActiveItems = items.stream()
+//                .anyMatch(item -> !item.isCompleted());
+//
+//        if (!hasActiveItems) {
+//            throw new InternalServerException("There are no products to buy!");
+//        }
+//
+//
+//        // check stock for each item
+//        for(CartItem item : items){
+//            Product p = item.getProduct();
+//            if(p.getQuantity() < item.getQuantity())
+//                throw new CartQuantityException(p.getBrand() + " out of stock");
+//        }
+//
+//        // subtract stock
+//        for(CartItem item : items){
+//            Product p = item.getProduct();
+//            p.setQuantity(p.getQuantity() - item.getQuantity());
+//            productRepository.save(p);
+//
+//            // mark item as completed
+//            if(item.getQuantity() > 0) {
+//                item.setCompleted(true);
+//            }
+//        }
+//
+//        // mark cart as completed
+//        //cart.setCompleted(true);
+//        cartRepository.save(cart);
+//    }
+
     @Transactional
-    public void buyProductsFromCart(Long cartId) {
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+    public List<CartItem> buyProductsFromCart(Long cartId) {
 
-        if(!optionalCart.isPresent())
-            throw new NotFoundException("Cart not found!");
-        Cart cart = optionalCart.get();
-
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NotFoundException("Cart not found!"));
 
         List<CartItem> items = cart.getCartItems();
 
         if (items.isEmpty()) {
-            throw new InternalServerException("Cart is empty");
+            throw new NotFoundException("Cart is empty!");
         }
 
-        // check stock for each item
-        for(CartItem item : items){
+        List<CartItem> example = new ArrayList<>();
+        // stock check
+        for (CartItem item : items) {
+            if(item.isCompleted()) continue;
+            example.add(item);
+
+            System.out.println(item);
             Product p = item.getProduct();
-            if(p.getQuantity() < item.getQuantity())
+
+            if (p.getQuantity() < item.getQuantity()) {
                 throw new CartQuantityException(p.getBrand() + " out of stock");
-        }
+            }
 
-        // subtract stock
-        for(CartItem item : items){
-            Product p = item.getProduct();
             p.setQuantity(p.getQuantity() - item.getQuantity());
             productRepository.save(p);
 
-            // mark item as completed
-            if(item.getQuantity() > 0) {
-                item.setCompleted(true);
-            }
+            item.setCompleted(true);
         }
-
-        // mark cart as completed
-        //cart.setCompleted(true);
+        cart.getCartItems().clear();
+        cart.setTotalQuantity(0);
+        cart.setPrice(0);
         cartRepository.save(cart);
+        return example;
+
     }
+
 
     @Transactional
     public void removeProductFromCart(Long cartId, String brand, int quantity) {

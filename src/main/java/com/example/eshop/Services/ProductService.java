@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.DTOs.CartItemDTO;
+import com.example.eshop.ErrorHandling.InternalServerException;
 import com.example.eshop.ErrorHandling.NegativePriceException;
 import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Cart;
