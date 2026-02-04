@@ -3,12 +3,11 @@ body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
     display: grid;
-    grid-template-areas: 'header header header header'
-                             '. formarea formarea .'
-                           'product product product product'
-                           'gotocart gotocart . .';
-    /* flex-direction: column;
-    align-items: center; */
+    grid-template-areas: 
+        'header header header header'
+        '. formarea formarea .'
+        'product product product product'
+        'gotocart gotocart . .';
     min-height: 100vh;
     margin: 0;
     color: #333;
@@ -22,7 +21,7 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
-h1{
+h1 {
     grid-area: header;
 }
 
@@ -30,19 +29,22 @@ h1{
 .go-to-cart {
     grid-area: gotocart;
     padding: 12px 25px;
-    background-color: #1e3a8a;
+    background: linear-gradient(135deg, #1e3a8a, #3b5ede);
     color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
+    font-weight: bold;
+    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
     margin-bottom: 30px;
 }
 
 .go-to-cart:hover {
-    background-color: #3b5ede;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #3b5ede, #1e40af);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.5);
 }
 
 /* Form για φίλτρα */
@@ -100,11 +102,10 @@ button#filter:hover {
 
 /* Κάρτες προϊόντων */
 .product-Card {
-   
     display: inline-block;
     width: 200px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* ζωντανό gradient */
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
     box-shadow: 0 12px 25px rgba(0,0,0,0.2);
     margin: 20px;
     text-align: center;
@@ -113,49 +114,42 @@ button#filter:hover {
 }
 
 .product-Card:hover {
-    transform: translateY(-6px) scale(1.05); /* λίγο zoom */
+    transform: translateY(-6px) scale(1.05);
     box-shadow: 0 18px 40px rgba(0, 58, 138, 0.3);
-    background: linear-gradient(135deg, #b2ebf2, #80deea); /* πιο έντονο hover */
+    background: linear-gradient(135deg, #b2ebf2, #80deea);
 }
 
 /* Κουμπιά / sections μέσα στις κάρτες */
 .product-to-cart {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
     margin-bottom: 10px;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #e0f7fa, #b2ebf2);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    padding: 8px 12px;
-    transition: background 0.3s, box-shadow 0.3s;
 }
 
-.product-to-cart:hover {
-    background: linear-gradient(145deg, #b2ebf2, #80deea);
-    box-shadow: 0 12px 30px rgba(0,58,138,0.25);
-}
-
-/* Κουμπί "Go to Cart" στη σελίδα Citizen */
-.go-to-cart {
-    padding: 12px 25px;
-    background-color: #1e3a8a;
+/* Κουμπί "Add to Cart" στις κάρτες */
+.add-to-cart-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #1e40af, #3b82f6); /* πιο έντονο μπλε gradient */
     color: #fff;
-    border: none;
-    border-radius: 10px;
+    font-weight: bold;
+    border: 2px solid #1e40af; /* μικρό περίγραμμα για ένταση */
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
-    margin-bottom: 30px;
+    box-shadow: 0 6px 15px rgba(30, 58, 138, 0.3), 0 0 8px rgba(59, 130, 246, 0.5);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
-.go-to-cart:hover {
-    background-color: #3b5ede;
-    transform: translateY(-2px);
+.add-to-cart-btn:hover {
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.5), 0 0 12px rgba(59, 130, 246, 0.7);
 }
 
-.containerProduct{
+
+.containerProduct {
     grid-area: product;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
 }

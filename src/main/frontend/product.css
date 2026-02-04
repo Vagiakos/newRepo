@@ -1,6 +1,87 @@
-#addMessage {
-    color: red;
-    font-size: 14px;
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #1e3a8a;
     text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.product-Card {
+    display: inline-block;
+    width: 300px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.product-Card:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 18px 40px rgba(0, 58, 138, 0.3);
+    background: linear-gradient(135deg, #b2ebf2, #80deea);
+}
+
+#product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 30px;
+}
+
+.quantity-Counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     margin-top: 10px;
+}
+
+button,
+.add-to-cart {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #1e3a8a, #3b5ede);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 16px;
+}
+
+button:hover,
+.add-to-cart:hover {
+    background: linear-gradient(135deg, #3b5ede, #1e40af);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.5);
+}
+
+.quantity-Counter button {
+    padding: 6px 12px;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+#addMessage {
+    margin-top: 15px;
+    color: green;
+    font-weight: bold;
 }

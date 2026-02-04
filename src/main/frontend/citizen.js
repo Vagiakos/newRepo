@@ -57,8 +57,10 @@ async function getAllProducts(brandValue, typeValue, minVal, maxVal, afmValue) {
 
             const productToCart = document.createElement("div");
             productToCart.className = "product-to-cart";
+
             const button = document.createElement("button");
             button.textContent = "Add to Cart";
+            button.className = "add-to-cart-btn"; // ← ΤΟ ΣΗΜΑΝΤΙΚΟ
             productToCart.appendChild(button);
 
             productCard.append(header, brand, type, description, price, quantity, productToCart);

@@ -150,4 +150,3 @@ buybutton.addEventListener("click", async () => {
         console.log(error.message);
     }
 });
-
