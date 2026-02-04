@@ -2,13 +2,20 @@
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-areas: 'header header header header'
+                             'formarea formarea . .'
+                           'product product product product'
+                           '. gotocart gotocart .';
+    /* flex-direction: column;
+    align-items: center; */
+    grid-template-columns: repeat(4, 1fr);
     min-height: 100vh;
     margin: 0;
     color: #333;
 }
+
+
 
 /* Τίτλοι */
 h1, h2 {
@@ -18,8 +25,13 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
+h1{
+    grid-area: header;
+}
+
 /* Κουμπί "Go to Cart" */
 .go-to-cart {
+    grid-area: gotocart;
     padding: 12px 25px;
     background-color: #1e3a8a;
     color: #fff;
@@ -38,6 +50,7 @@ h1, h2 {
 
 /* Form για φίλτρα */
 form {
+    grid-area: formarea;
     background: #fff;
     padding: 35px 45px;
     border-radius: 15px;
@@ -90,6 +103,7 @@ button#filter:hover {
 
 /* Κάρτες προϊόντων */
 .product-Card {
+    grid-area: product;
     display: inline-block;
     width: 200px;
     border-radius: 12px;
@@ -99,6 +113,7 @@ button#filter:hover {
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .product-Card:hover {

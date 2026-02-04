@@ -27,7 +27,6 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonBackReference
     private Cart cart; // many CartItems can reference the same Cart(same cart_id)
 
     @ManyToOne
