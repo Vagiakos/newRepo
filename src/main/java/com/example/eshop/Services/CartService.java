@@ -88,11 +88,9 @@ public class CartService {
             throw new InternalServerException("Cart is empty");
         }
 
-        List<CartItem> example = new ArrayList<>();
         // stock check
         for (CartItem item : items) {
-            if(item.isCompleted()) continue;
-            example.add(item);
+            if (item.isCompleted()) continue;
 
             System.out.println(item);
             Product p = item.getProduct();
@@ -100,17 +98,7 @@ public class CartService {
             if (p.getQuantity() < item.getQuantity()) {
                 throw new CartQuantityException(p.getBrand() + " out of stock");
             }
-        for (CartItem item : items) {
-            if (item.isCompleted()) continue;
-            Product product = productRepository.findById(
-                    item.getProduct().getBrand()
-            ).orElseThrow(() -> new NotFoundException("Product not found"));
-
-            if (product.getQuantity() < item.getQuantity()) {
-                throw new CartQuantityException(
-                        product.getBrand() + " out of stock"
-                );
-            }
+        }
 
         // subtract stock
         for(CartItem item : items){

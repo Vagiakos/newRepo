@@ -26,8 +26,8 @@ public class CartController {
     private ProductService productService;
 
     @PostMapping("/buyProductsFromCart")
-    public List<CartItem> buyProductsFromCart(@RequestParam Long cartId){
-        return cartService.buyProductsFromCart(cartId);
+    public void buyProductsFromCart(@RequestParam Long cartId){
+        cartService.buyProductsFromCart(cartId);
     }
 
     @DeleteMapping("/removeProductFromCart")
