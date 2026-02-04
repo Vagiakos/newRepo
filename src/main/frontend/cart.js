@@ -1,7 +1,11 @@
 const cartID = localStorage.getItem("cartId");
 const messageSuccess = document.getElementById("message");
+const buybutton1 = document.querySelector(".buy-products");
+
 getProductsFromCart(cartID);
 
+
+buybutton1.hidden = true;
 async function getProductsFromCart(cartID) {
     try {
         const response = await fetch("http://localhost:8080/cart/getCartProducts?cartId=" + cartID);
@@ -20,6 +24,7 @@ async function getProductsFromCart(cartID) {
                     "<p id='empty-cart'>Empty cart!</p>"
                 );
             }
+            updateBuyButtonVisibility();
             return;
         }
         result.forEach(element => {
@@ -70,6 +75,7 @@ async function getProductsFromCart(cartID) {
 
 
             });
+            updateBuyButtonVisibility();
 
             plusButton.addEventListener("click", async () => {
 
@@ -107,6 +113,7 @@ async function getProductsFromCart(cartID) {
                     messageSuccess.textContent = "Product Removed Successfully";
 
                     productCard.remove();
+                    updateBuyButtonVisibility();
                 } catch (error) {
                     console.log(error.message);
                 }
@@ -124,6 +131,7 @@ async function getProductsFromCart(cartID) {
 
 
         });
+        updateBuyButtonVisibility();
     } catch (error) {
         message.textContent = error.message;
     }
@@ -144,9 +152,19 @@ buybutton.addEventListener("click", async () => {
 
         document.querySelectorAll(".product-to-cart").forEach(el => el.remove());
 
-
+        updateBuyButtonVisibility();
+        setTimeout(() => {
+                    // navigate to main page
+                    window.location.href = "citizen.html";
+                }, 500);
 
     } catch (error) {
         console.log(error.message);
     }
 });
+
+
+function updateBuyButtonVisibility() {
+    const products = document.querySelectorAll(".product-to-cart");
+    buybutton1.hidden = products.length === 0;
+}

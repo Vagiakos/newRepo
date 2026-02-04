@@ -91,8 +91,6 @@ public class CartService {
         // stock check
         for (CartItem item : items) {
             if (item.isCompleted()) continue;
-
-            System.out.println(item);
             Product p = item.getProduct();
 
             if (p.getQuantity() < item.getQuantity()) {
@@ -102,6 +100,7 @@ public class CartService {
 
         // subtract stock
         for(CartItem item : items){
+            if(item.isCompleted()) continue;
             Product p = item.getProduct();
             p.setQuantity(p.getQuantity() - item.getQuantity());
             productRepository.save(p);
