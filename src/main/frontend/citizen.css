@@ -1,16 +1,4 @@
-/* Γενικό body */
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    color: #333;
-}
-
-/* Τίτλοι */
+/* Τίτλοι H1 και H2 για τη Citizen σελίδα */
 h1, h2 {
     color: #1e3a8a;
     text-align: center;
@@ -18,82 +6,12 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
-/* Κουμπί "Go to Cart" */
-.go-to-cart {
-    padding: 12px 25px;
-    background-color: #1e3a8a;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
-    margin-bottom: 30px;
-}
-
-.go-to-cart:hover {
-    background-color: #3b5ede;
-    transform: translateY(-2px);
-}
-
-/* Form για φίλτρα */
-form {
-    background: #fff;
-    padding: 35px 45px;
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 40px;
-}
-
-label {
-    font-weight: bold;
-    color: #1e3a8a;
-    margin-bottom: 5px;
-    display: inline-block;
-    font-size: 14px;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-input[type="text"]:focus {
-    border-color: #1e3a8a;
-    box-shadow: 0 0 5px rgba(30, 58, 138, 0.3);
-    outline: none;
-}
-
-button#filter {
-    padding: 12px;
-    background-color: #1e3a8a;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-button#filter:hover {
-    background-color: #3b5ede;
-    transform: translateY(-2px);
-}
-
-/* Κάρτες προϊόντων */
+/* Κάρτες προϊόντων για Citizen */
 .product-Card {
     display: inline-block;
     width: 200px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* ζωντανό gradient */
     box-shadow: 0 12px 25px rgba(0,0,0,0.2);
     margin: 20px;
     text-align: center;
@@ -102,12 +20,12 @@ button#filter:hover {
 }
 
 .product-Card:hover {
-    transform: translateY(-6px) scale(1.05);
+    transform: translateY(-6px) scale(1.05); /* λίγο zoom */
     box-shadow: 0 18px 40px rgba(0, 58, 138, 0.3);
-    background: linear-gradient(135deg, #b2ebf2, #80deea);
+    background: linear-gradient(135deg, #b2ebf2, #80deea); /* πιο έντονο hover */
 }
 
-/* Κουμπί "Add to Cart" μέσα στην κάρτα */
+/* Κουμπιά / sections μέσα στις κάρτες */
 .product-to-cart {
     display: flex;
     justify-content: space-between;
@@ -123,4 +41,22 @@ button#filter:hover {
 .product-to-cart:hover {
     background: linear-gradient(145deg, #b2ebf2, #80deea);
     box-shadow: 0 12px 30px rgba(0,58,138,0.25);
+}
+
+/* Κουμπί "Go to Cart" στη σελίδα Citizen */
+.go-to-cart {
+    padding: 12px 25px;
+    background-color: #1e3a8a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 30px;
+}
+
+.go-to-cart:hover {
+    background-color: #3b5ede;
+    transform: translateY(-2px);
 }
