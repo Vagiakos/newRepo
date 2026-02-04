@@ -1,5 +1,6 @@
 package com.example.eshop.Controllers;
 import com.example.eshop.DTOs.CartItemDTO;
+import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Services.CitizenService;
 import com.example.eshop.Services.ProductService;
@@ -36,7 +37,7 @@ public class CartController {
 
     @GetMapping("/getCartProducts")
     public List<CartItemDTO> getCartProducts(@RequestParam Long cartId){
-        return productService.getCartProducts(cartId);
+            return productService.getCartProducts(cartId);
     }
 
     @PostMapping("/addProductToCart")

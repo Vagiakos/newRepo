@@ -24,11 +24,12 @@ public class CartItem {
     
     @Column(columnDefinition = "TIMESTAMP(0)")//cuts nano seconds
     private LocalDateTime addedAt; // timestamp addition
-
+    
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart; // many CartItems can reference the same Cart(same cart_id)
-
+    
     @ManyToOne
     @JoinColumn(name = "product_brand")
     @JsonBackReference

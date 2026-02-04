@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.eshop.ErrorHandling.NegativePriceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.eshop.DTOs.CartItemDTO;
+import com.example.eshop.ErrorHandling.NegativePriceException;
 import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Cart;
+import com.example.eshop.Models.CartItem;
 import com.example.eshop.Models.Product;
 import com.example.eshop.Models.Shop;
 import com.example.eshop.Repositories.CartRepository;
@@ -124,6 +125,24 @@ public class ProductService {
         if (!optionalCart.isPresent())
             throw new NotFoundException("Cart not found!");
         Cart cart = optionalCart.get();
-        return cart.getCartItems().stream().map(CartItemDTO::new).toList();
+        List<CartItem> cartItem = cart.getCartItems();
+        
+        List<CartItem> cartItems = new ArrayList<CartItem>();
+        for (CartItem item: cartItem){
+            if (!item.isCompleted())
+                cartItems.add(item);
+        }
+
+        if (cartItems.isEmpty())
+            throw new NotFoundException("Items not found!");
+        
+        List<CartItemDTO> cartItemsDTO = new ArrayList<CartItemDTO>();
+
+        for (CartItem item: cartItems){
+            cartItemsDTO.add(new CartItemDTO(item));
+        }
+
+        return cartItemsDTO;
+
     }
 }

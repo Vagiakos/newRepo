@@ -37,7 +37,8 @@ public class Cart {
     // )
 
     //private List<Product> products = new ArrayList<>();
-
+    
+    @JsonManagedReference
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 

@@ -4,9 +4,9 @@ body {
     background: linear-gradient(135deg, #e0f7fa, #f0f4f8);
     display: grid;
     grid-template-areas: 'header header header header'
-                             'formarea formarea . .'
+                             '. formarea formarea .'
                            'product product product product'
-                           '. gotocart gotocart .';
+                           'gotocart gotocart . .';
     /* flex-direction: column;
     align-items: center; */
     min-height: 100vh;
