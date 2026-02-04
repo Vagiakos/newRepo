@@ -1,13 +1,12 @@
 package com.example.eshop.Services;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.example.eshop.ErrorHandling.InternalServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.eshop.ErrorHandling.CartQuantityException;
+import com.example.eshop.ErrorHandling.InternalServerException;
 import com.example.eshop.ErrorHandling.NotFoundException;
 import com.example.eshop.Models.Cart;
 import com.example.eshop.Models.CartItem;
@@ -75,40 +74,35 @@ public class CartService {
     //use transactional to rollback the updates (atomic changes)
     @Transactional
     public void buyProductsFromCart(Long cartId) {
-        Optional<Cart> optionalCart = cartRepository.findById(cartId);
 
-        if(!optionalCart.isPresent())
-            throw new NotFoundException("Cart not found!");
-        Cart cart = optionalCart.get();
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NotFoundException("Cart not found"));
 
-
+        //check
         List<CartItem> items = cart.getCartItems();
 
         if (items.isEmpty()) {
             throw new InternalServerException("Cart is empty");
         }
 
-        // check stock for each item
-        for(CartItem item : items){
-            Product p = item.getProduct();
-            if(p.getQuantity() < item.getQuantity())
-                throw new CartQuantityException(p.getBrand() + " out of stock");
-        }
+        for (CartItem item : items) {
+            if (item.isCompleted()) continue;
+            Product product = productRepository.findById(
+                    item.getProduct().getBrand()
+            ).orElseThrow(() -> new NotFoundException("Product not found"));
 
-        // subtract stock
-        for(CartItem item : items){
-            Product p = item.getProduct();
-            p.setQuantity(p.getQuantity() - item.getQuantity());
-            productRepository.save(p);
-
-            // mark item as completed
-            if(item.getQuantity() > 0) {
-                item.setCompleted(true);
+            if (product.getQuantity() < item.getQuantity()) {
+                throw new CartQuantityException(
+                        product.getBrand() + " out of stock"
+                );
             }
-        }
 
-        // mark cart as completed
-        //cart.setCompleted(true);
+            product.setQuantity(
+                    product.getQuantity() - item.getQuantity()
+            );
+
+            item.setCompleted(true);
+        }
         cartRepository.save(cart);
     }
 
